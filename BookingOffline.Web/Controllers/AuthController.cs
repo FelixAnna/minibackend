@@ -12,7 +12,7 @@ namespace BookingOffline.Web.Controllers
             this._loginService = loginService;
         }
 
-        [HttpGet("alipay")]
+        [HttpGet("login/alipay")]
         [AllowAnonymous]
         public IActionResult Login(string code)
         {

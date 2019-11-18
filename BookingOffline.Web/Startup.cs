@@ -21,14 +21,12 @@ namespace BookingOffline.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-
             services.AddSwaggerUI();
-
             services.AddJwtAutentication(Configuration);
 
-            services.AddScoped<ILoginService, LoginService>();
-            services.AddScoped<AlipayService>();
-            services.AddScoped<TokenGeneratorService>();
+            services.AddBSSevices();
+            services.AddDASevices();
+            services.AddCommonSevices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

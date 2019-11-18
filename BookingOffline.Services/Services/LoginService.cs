@@ -1,17 +1,17 @@
 ﻿using BookingOffline.Common;
 using BookingOffline.Services.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Microsoft.Extensions.Logging;
 
 namespace BookingOffline.Services
 {
     public class LoginService : ILoginService
     {
+        private readonly ILogger<LoginService> _logger;
         private TokenGeneratorService _tokenService;
         private AlipayService _alipayService;
-        public LoginService(TokenGeneratorService tokenService, AlipayService alipayService)
+        public LoginService(TokenGeneratorService tokenService, AlipayService alipayService, ILogger<LoginService> logger)
         {
+            _logger = logger;
             this._tokenService = tokenService;
             this._alipayService = alipayService;
         }
@@ -21,7 +21,7 @@ namespace BookingOffline.Services
             var response = _alipayService.GetUserIdByCode(code);
             if (response.IsError)
             {
-                Console.WriteLine(response.Body);
+                _logger.LogError(response.Body);
                 return null;
             }
 
