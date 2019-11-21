@@ -6,7 +6,7 @@ namespace BookingOffline.Web.Controllers
 {
     public class AuthController : ControllerBase
     {
-        private ILoginService _loginService;
+        private readonly ILoginService _loginService;
         public AuthController(ILoginService loginService)
         {
             this._loginService = loginService;

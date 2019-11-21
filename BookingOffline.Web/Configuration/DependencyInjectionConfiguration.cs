@@ -1,4 +1,5 @@
 ﻿using BookingOffline.Common;
+using BookingOffline.Repositories;
 using BookingOffline.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,12 +14,15 @@ namespace BookingOffline.Web.Configuration
 
         public static void AddDASevices(this IServiceCollection services)
         {
+            services.AddScoped<IAlipayUserRepository, AlipayUserRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<SQLiteDBContext>();
         }
 
         public static void AddCommonSevices(this IServiceCollection services)
         {
-            services.AddScoped<AlipayService>();
-            services.AddScoped<TokenGeneratorService>();
+            services.AddScoped<IAlipayService, AlipayService>();
+            services.AddScoped<ITokenGeneratorService, TokenGeneratorService>();
         }
     }
 }

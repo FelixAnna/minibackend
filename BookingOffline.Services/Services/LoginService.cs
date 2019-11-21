@@ -1,19 +1,25 @@
 ﻿using BookingOffline.Common;
+using BookingOffline.Entities;
+using BookingOffline.Repositories;
 using BookingOffline.Services.Models;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace BookingOffline.Services
 {
     public class LoginService : ILoginService
     {
         private readonly ILogger<LoginService> _logger;
-        private TokenGeneratorService _tokenService;
-        private AlipayService _alipayService;
-        public LoginService(TokenGeneratorService tokenService, AlipayService alipayService, ILogger<LoginService> logger)
+        private readonly ITokenGeneratorService _tokenService;
+        private readonly IAlipayService _alipayService;
+        private readonly IAlipayUserRepository _userRepo;
+
+        public LoginService(ITokenGeneratorService tokenService, IAlipayService alipayService, IAlipayUserRepository userRepo, ILogger<LoginService> logger)
         {
             _logger = logger;
             this._tokenService = tokenService;
             this._alipayService = alipayService;
+            _userRepo = userRepo;
         }
 
         public LoginResultModel LoginMiniAlipay(string code)
@@ -25,16 +31,27 @@ namespace BookingOffline.Services
                 return null;
             }
 
-            var tokenStr = _tokenService.CreateJwtToken();
+            var alipayUser = _userRepo.FindById(response.AlipayUserId);
+            if (alipayUser == null)
+            {
+                var user = new AlipayUser()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    AlibabaUserId = response.UserId,
+                    AlipayUserId = response.AlipayUserId,
+                    CreatedAt = DateTime.UtcNow
+                };
+                alipayUser = _userRepo.Create(user);
+            }
+
+            var tokenStr = _tokenService.CreateJwtToken(alipayUser);
             var result = new LoginResultModel()
             {
                 BOToken = tokenStr,
                 AccessToken = response.AccessToken,
-                AlipayUserId = response.AlipayUserId,
                 ExpiresIn = response.ReExpiresIn,
                 ReExpiresIn = response.ReExpiresIn,
-                RefreshToken = response.RefreshToken,
-                UserId = response.UserId
+                RefreshToken = response.RefreshToken
             };
 
             return result;

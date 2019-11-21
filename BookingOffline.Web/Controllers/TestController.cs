@@ -1,6 +1,8 @@
 ﻿using BookingOffline.Common;
+using BookingOffline.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace BookingOffline.Web.Controllers
 {
@@ -8,12 +10,10 @@ namespace BookingOffline.Web.Controllers
     [Route("[controller]")]
     public class TestController : ControllerBase
     {
-        private TokenGeneratorService _tokenService;
-        private AlipayService _alipayService;
-        public TestController(TokenGeneratorService tokenService, AlipayService alipayService)
+        private readonly ITokenGeneratorService _tokenService;
+        public TestController(ITokenGeneratorService tokenService)
         {
             this._tokenService = tokenService;
-            this._alipayService = alipayService;
         }
 
         [AllowAnonymous]
@@ -21,7 +21,13 @@ namespace BookingOffline.Web.Controllers
         public IActionResult Index()
         {
             // authentication successful so generate jwt token
-            var tokenStr = _tokenService.CreateJwtToken();
+            var tokenStr = _tokenService.CreateJwtToken(new AlipayUser()
+            {
+                Id = Guid.NewGuid().ToString(),
+                AlibabaUserId = "1234a",
+                AlipayUserId = "123456abc",
+                CreatedAt = DateTime.UtcNow
+            });
             return Ok(new { token = tokenStr });
         }
 
