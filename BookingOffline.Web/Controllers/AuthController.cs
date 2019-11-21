@@ -1,9 +1,11 @@
 ﻿using BookingOffline.Services;
+using BookingOffline.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingOffline.Web.Controllers
 {
+    [Route("auth")]
     public class AuthController : ControllerBase
     {
         private readonly ILoginService _loginService;

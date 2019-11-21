@@ -13,7 +13,7 @@ namespace BookingOffline.Web
             var logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try
             {
-                logger.Debug("init main");
+                logger.Debug("Init main");
                 CreateWebHostBuilder(args).Build().Run();
             }
             catch (Exception ex)

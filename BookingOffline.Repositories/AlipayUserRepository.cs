@@ -1,4 +1,5 @@
 ﻿using BookingOffline.Entities;
+using BookingOffline.Repositories.Interfaces;
 using System;
 using System.Linq;
 
@@ -20,12 +21,12 @@ namespace BookingOffline.Repositories
             return result.Entity;
         }
 
-        public bool Delete(string key)
+        public bool Delete(string key, string userId)
         {
             throw new NotImplementedException();
         }
 
-        public IQueryable FindAll(string userId)
+        public IQueryable<AlipayUser> FindAll(string userId)
         {
             throw new NotImplementedException();
         }

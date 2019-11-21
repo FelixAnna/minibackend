@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace BookingOffline.Services.Models
+{
+    public class OrderItemModel
+    {
+        public string OrderId { get; set; }
+        
+        public int? ProductId { get; set; }
+
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+
+        public string Remark { get; set; }
+
+        public OrderItemOptionModel[] Options { get; set; }
+    }
+
+    public class OrderItemOptionModel
+    {
+        public string Name { get; set; }
+        public bool Value { get; set; }
+    }
+}

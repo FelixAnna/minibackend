@@ -1,6 +1,7 @@
 ﻿using BookingOffline.Common;
 using BookingOffline.Entities;
-using BookingOffline.Repositories;
+using BookingOffline.Repositories.Interfaces;
+using BookingOffline.Services.Interfaces;
 using BookingOffline.Services.Models;
 using Microsoft.Extensions.Logging;
 using System;
@@ -34,14 +35,13 @@ namespace BookingOffline.Services
             var alipayUser = _userRepo.FindById(response.AlipayUserId);
             if (alipayUser == null)
             {
-                var user = new AlipayUser()
+                alipayUser = _userRepo.Create(new AlipayUser()
                 {
                     Id = Guid.NewGuid().ToString(),
                     AlibabaUserId = response.UserId,
                     AlipayUserId = response.AlipayUserId,
                     CreatedAt = DateTime.UtcNow
-                };
-                alipayUser = _userRepo.Create(user);
+                });
             }
 
             var tokenStr = _tokenService.CreateJwtToken(alipayUser);
@@ -51,7 +51,8 @@ namespace BookingOffline.Services
                 AccessToken = response.AccessToken,
                 ExpiresIn = response.ReExpiresIn,
                 ReExpiresIn = response.ReExpiresIn,
-                RefreshToken = response.RefreshToken
+                RefreshToken = response.RefreshToken,
+                UserId = alipayUser.Id
             };
 
             return result;

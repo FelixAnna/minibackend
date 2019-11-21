@@ -1,4 +1,5 @@
 ﻿using BookingOffline.Entities;
+using BookingOffline.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,9 +27,9 @@ namespace BookingOffline.Repositories
             return newItem.Entity;
         }
 
-        public bool Delete(string key)
+        public bool Delete(string key, string userId)
         {
-            var order = _context.Orders.FirstOrDefault(x => x.OrderId == key);
+            var order = _context.Orders.FirstOrDefault(x => x.OrderId == key && x.CreatedBy == userId);
             if (order == null)
             {
                 return false;
@@ -39,7 +40,7 @@ namespace BookingOffline.Repositories
             return true;
         }
 
-        public IQueryable FindAll(string userId)
+        public IQueryable<Order> FindAll(string userId)
         {
             return _context.Orders.Where(x => x.CreatedBy == userId);
         }

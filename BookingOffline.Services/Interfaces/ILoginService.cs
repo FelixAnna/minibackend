@@ -1,6 +1,6 @@
 ﻿using BookingOffline.Services.Models;
 
-namespace BookingOffline.Services
+namespace BookingOffline.Services.Interfaces
 {
     public interface ILoginService
     {

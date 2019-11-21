@@ -23,7 +23,7 @@ namespace BookingOffline.Web.Controllers
             // authentication successful so generate jwt token
             var tokenStr = _tokenService.CreateJwtToken(new AlipayUser()
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = "yufelix",
                 AlibabaUserId = "1234a",
                 AlipayUserId = "123456abc",
                 CreatedAt = DateTime.UtcNow

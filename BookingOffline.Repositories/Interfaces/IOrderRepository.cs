@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using BookingOffline.Entities;
 
-namespace BookingOffline.Repositories
+namespace BookingOffline.Repositories.Interfaces
 {
     public interface IOrderRepository : IRepository<Order, string>
     {
