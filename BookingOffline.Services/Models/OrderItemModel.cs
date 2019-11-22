@@ -15,7 +15,7 @@ namespace BookingOffline.Services.Models
 
         public string Remark { get; set; }
 
-        public OrderItemOptionModel[] Options { get; set; }
+        public OrderItemOptionModel[] Options { get; set; } = new List<OrderItemOptionModel>().ToArray();
     }
 
     public class OrderItemOptionModel

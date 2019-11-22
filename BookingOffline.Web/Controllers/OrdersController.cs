@@ -2,6 +2,7 @@
 using BookingOffline.Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Security.Claims;
 
@@ -17,6 +18,11 @@ namespace BookingOffline.Web.Controllers
             this._service = service;
         }
 
+        /// <summary>
+        /// Create a new order (with no orderItem)
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost()]
         public ActionResult CreateOrder([FromBody]OrderModel model)
         {
@@ -25,6 +31,11 @@ namespace BookingOffline.Web.Controllers
             return Ok(order);
         }
 
+        /// <summary>
+        /// Remove a order and it related orderItem
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
         [HttpDelete]
         public ActionResult RemoveOrder(string orderId)
         {
@@ -32,9 +43,14 @@ namespace BookingOffline.Web.Controllers
             if (_service.RemoveOrder(orderId, userId))
                 return Ok();
             else
-                return Problem(statusCode: 500);
+                throw new Exception($"Failed to remove order: {orderId}");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult GetOrder(string orderId)
         {
