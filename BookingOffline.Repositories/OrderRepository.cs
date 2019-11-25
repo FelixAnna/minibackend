@@ -57,8 +57,8 @@ namespace BookingOffline.Repositories
         {
             return _context.Orders
                 .Include(o => o.OrderItems)
-                    .ThenInclude(a=>a.OrderItemOptions)
-                .Where(x => x.CreatedBy == userId);
+                    .ThenInclude(a => a.OrderItemOptions)
+                .Where(x => x.CreatedBy == userId || x.OrderItems.Any(y => y.CreatedBy == userId));
         }
     }
 }

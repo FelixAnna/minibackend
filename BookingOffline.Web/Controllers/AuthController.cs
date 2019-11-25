@@ -16,7 +16,7 @@ namespace BookingOffline.Web.Controllers
 
         [HttpGet("login/alipay")]
         [AllowAnonymous]
-        public IActionResult Login(string code)
+        public IActionResult Login([FromQuery]string code)
         {
             var response = _loginService.LoginMiniAlipay(code);
             if (response == null)

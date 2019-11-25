@@ -10,10 +10,10 @@ namespace BookingOffline.Web.Controllers
 {
     [Authorize]
     [Route("orders/items")]
-    public class OrderItemController : ControllerBase
+    public class OrderItemsController : ControllerBase
     {
         private readonly IOrderItemService _service;
-        public OrderItemController(IOrderItemService service)
+        public OrderItemsController(IOrderItemService service)
         {
             this._service = service;
         }
@@ -36,8 +36,8 @@ namespace BookingOffline.Web.Controllers
         /// </summary>
         /// <param name="orderItemId"></param>
         /// <returns></returns>
-        [HttpDelete]
-        public ActionResult RemoveOrderItem(int orderItemId)
+        [HttpPost("remove")]
+        public ActionResult RemoveOrderItem([FromQuery]int orderItemId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (_service.RemoveOrderItem(orderItemId, userId))

@@ -36,8 +36,8 @@ namespace BookingOffline.Web.Controllers
         /// </summary>
         /// <param name="orderId"></param>
         /// <returns></returns>
-        [HttpDelete]
-        public ActionResult RemoveOrder(string orderId)
+        [HttpPost("remove")]
+        public ActionResult RemoveOrder([FromQuery]string orderId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (_service.RemoveOrder(orderId, userId))
