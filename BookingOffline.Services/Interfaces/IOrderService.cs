@@ -7,8 +7,8 @@ namespace BookingOffline.Services.Interfaces
     public interface IOrderService
     {
         Order CreateOrder(string userId, OrderModel order);
-        Order GetOrder(string orderId);
-        IList<Order> GetOrders(string userId);
+        OrderResultModel GetOrder(string orderId);
+        OrderCollectionResultModel GetOrders(string userId);
         bool RemoveOrder(string orderId, string userId);
     }
 }

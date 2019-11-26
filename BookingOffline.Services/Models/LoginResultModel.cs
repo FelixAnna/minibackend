@@ -12,10 +12,17 @@ namespace BookingOffline.Services.Models
         public string ReExpiresIn { get; set; }
         [JsonProperty("alipay_refresh_token")]
         public string RefreshToken { get; set; }
-        [JsonProperty("bo_user_id")]
+
+        [JsonProperty("userId")]
         public string UserId { get; set; }
 
-        [JsonProperty("bo_token")]
+        [JsonProperty("token")]
         public string BOToken { get; set; }
+
+        [JsonProperty("nickName")]
+        public string NickName { get; set; }
+
+        [JsonProperty("photo")]
+        public string Photo { get; set; }
     }
 }

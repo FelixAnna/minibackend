@@ -24,6 +24,12 @@ namespace BookingOffline.Repositories.Migrations
                     b.Property<string>("AlibabaUserId")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("AlipayName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AlipayPhoto")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("AlipayUserId")
                         .HasColumnType("TEXT");
 
@@ -73,6 +79,7 @@ namespace BookingOffline.Repositories.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OrderId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Price")
@@ -117,7 +124,9 @@ namespace BookingOffline.Repositories.Migrations
                 {
                     b.HasOne("BookingOffline.Entities.Order", "Order")
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BookingOffline.Entities.OrderItemOption", b =>
@@ -125,7 +134,7 @@ namespace BookingOffline.Repositories.Migrations
                     b.HasOne("BookingOffline.Entities.OrderItem", "OrderItem")
                         .WithMany("OrderItemOptions")
                         .HasForeignKey("OrderItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

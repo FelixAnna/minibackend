@@ -14,6 +14,8 @@ namespace BookingOffline.Repositories.Migrations
                     Id = table.Column<string>(nullable: false),
                     AlibabaUserId = table.Column<string>(nullable: true),
                     AlipayUserId = table.Column<string>(nullable: true),
+                    AlipayName = table.Column<string>(nullable: true),
+                    AlipayPhoto = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -48,7 +50,7 @@ namespace BookingOffline.Repositories.Migrations
                     Remark = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
-                    OrderId = table.Column<string>(nullable: true)
+                    OrderId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,7 +81,7 @@ namespace BookingOffline.Repositories.Migrations
                         column: x => x.OrderItemId,
                         principalTable: "OrderItems",
                         principalColumn: "OrderItemId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(

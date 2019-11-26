@@ -16,7 +16,7 @@ namespace BookingOffline.Repositories
             _context = context;
         }
 
-        public Order FindById(string key)
+        public Order FindByAlipayId(string key)
         {
             return _context.Orders
                 .Include(o => o.OrderItems)

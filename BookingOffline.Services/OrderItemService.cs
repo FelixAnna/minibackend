@@ -43,7 +43,7 @@ namespace BookingOffline.Services
 
         public OrderItem GetOrderItem(int orderItemId)
         {
-            var item = _orderItemRepo.FindById(orderItemId);
+            var item = _orderItemRepo.FindByAlipayId(orderItemId);
             return item;
         }
 

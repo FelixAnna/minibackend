@@ -13,7 +13,7 @@ namespace BookingOffline.Repositories
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options
             //.UseLazyLoadingProxies()
-            .UseSqlite("Data Source=sqlitedemo.db");
+            .UseSqlite("Data Source=bo.db");
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Order>()

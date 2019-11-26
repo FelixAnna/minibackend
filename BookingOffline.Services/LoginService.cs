@@ -32,12 +32,12 @@ namespace BookingOffline.Services
                 return null;
             }
 
-            var alipayUser = _userRepo.FindById(response.AlipayUserId);
+            var alipayUser = _userRepo.FindByAlipayId(response.AlipayUserId);
             if (alipayUser == null)
             {
                 alipayUser = _userRepo.Create(new AlipayUser()
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = "yufelix",
                     AlibabaUserId = response.UserId,
                     AlipayUserId = response.AlipayUserId,
                     CreatedAt = DateTime.UtcNow
@@ -52,7 +52,9 @@ namespace BookingOffline.Services
                 ExpiresIn = response.ReExpiresIn,
                 ReExpiresIn = response.ReExpiresIn,
                 RefreshToken = response.RefreshToken,
-                UserId = alipayUser.Id
+                UserId = alipayUser.Id,
+                NickName = alipayUser.AlipayName,
+                Photo = alipayUser.AlipayPhoto
             };
 
             return result;

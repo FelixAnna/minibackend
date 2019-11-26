@@ -68,7 +68,7 @@ namespace BookingOffline.Web.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var orders = _service.GetOrders(userId);
-            if (orders.Any())
+            if (orders.TotalCount > 0)
             {
                 return Ok(orders);
             }

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingOffline.Repositories.Migrations
 {
     [DbContext(typeof(SQLiteDBContext))]
-    [Migration("20191121103416_InitialCreate")]
+    [Migration("20191126105329_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,12 @@ namespace BookingOffline.Repositories.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("AlibabaUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AlipayName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AlipayPhoto")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("AlipayUserId")
@@ -75,6 +81,7 @@ namespace BookingOffline.Repositories.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OrderId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Price")
@@ -119,7 +126,9 @@ namespace BookingOffline.Repositories.Migrations
                 {
                     b.HasOne("BookingOffline.Entities.Order", "Order")
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BookingOffline.Entities.OrderItemOption", b =>
@@ -127,7 +136,7 @@ namespace BookingOffline.Repositories.Migrations
                     b.HasOne("BookingOffline.Entities.OrderItem", "OrderItem")
                         .WithMany("OrderItemOptions")
                         .HasForeignKey("OrderItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

@@ -14,6 +14,7 @@ namespace BookingOffline.Web.Configuration
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IOrderItemService, OrderItemService>();
+            services.AddScoped<IUserService, UserService>();
         }
 
         public static void AddDASevices(this IServiceCollection services)

@@ -10,6 +10,9 @@ namespace BookingOffline.Entities
 
         public string AlipayUserId { get; set; }
 
+        public string AlipayName { get; set; }
+        public string AlipayPhoto { get; set; }
+
         public DateTime CreatedAt { get; set; }
     }
 }

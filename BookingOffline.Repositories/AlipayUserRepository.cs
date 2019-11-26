@@ -2,6 +2,7 @@
 using BookingOffline.Repositories.Interfaces;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BookingOffline.Repositories
 {
@@ -26,15 +27,29 @@ namespace BookingOffline.Repositories
             throw new NotImplementedException();
         }
 
-        public IQueryable<AlipayUser> FindAll(string userId)
+        public IQueryable<AlipayUser> FindAll(params string[] userIds)
         {
-            throw new NotImplementedException();
+            var user = _context.AlipayUsers.Where(x => userIds.Contains(x.Id));
+            return user;
         }
 
-        public AlipayUser FindById(string alipayUserId)
+        public AlipayUser FindByAlipayId(string alipayUserId)
         {
             var user = _context.AlipayUsers.FirstOrDefault(x => x.AlipayUserId == alipayUserId);
             return user;
+        }
+
+        public async Task UpdateAsync(string userId, string nickName, string photo)
+        {
+            var user = _context.AlipayUsers.FirstOrDefault(x => x.Id == userId);
+            if (user != null)
+            {
+                user.AlipayName = nickName;
+                user.AlipayPhoto = photo;
+
+                _context.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
