@@ -62,11 +62,13 @@ namespace BookingOffline.Services
             return result;
         }
 
-        public OrderCollectionResultModel GetOrders(string userId)
+        public OrderCollectionResultModel GetOrders(string userId, int page = 1, int size = 10)
         {
-            var orders = _orderRepo.FindAll(userId);
+            var orders = _orderRepo.FindAll(userId).ToArray();
+
+            var returnedOrders = orders?.Skip((page - 1) * size).Take(size).ToList();
             var users = new List<AlipayUser>();
-            var relatedUserIds = orders.Select(x => x.CreatedBy).ToList();
+            var relatedUserIds = returnedOrders.Select(x => x.CreatedBy).ToList();
             if (relatedUserIds.Any())
             {
                 users = _userRepository.FindAll(relatedUserIds.ToArray()).ToList();
@@ -75,7 +77,7 @@ namespace BookingOffline.Services
             var results = new OrderCollectionResultModel()
             {
                 TotalCount = orders.Count(),
-                Orders = (from od in orders?.Skip(0).Take(10).ToList()
+                Orders = (from od in returnedOrders
                           let us = users.FirstOrDefault(u => u.Id == od.CreatedBy)
                           select OrderCollectionItem.ToOrderCollectionItem(od, us)).ToList()
             };

@@ -7,7 +7,7 @@ using System;
 namespace BookingOffline.Web.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("test")]
     public class TestController : ControllerBase
     {
         private readonly ITokenGeneratorService _tokenService;
