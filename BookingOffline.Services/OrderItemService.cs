@@ -12,38 +12,45 @@ namespace BookingOffline.Services
     public class OrderItemService : IOrderItemService
     {
         private readonly ILogger<OrderItemService> _logger;
+        private readonly IOrderRepository _orderRepo;
         private readonly IOrderItemRepository _orderItemRepo;
 
-        public OrderItemService(IOrderRepository service, IOrderItemRepository productRepo, ILogger<OrderItemService> logger)
+        public OrderItemService(IOrderRepository orderRepo, IOrderItemRepository productRepo, ILogger<OrderItemService> logger)
         {
+            _orderRepo = orderRepo;
             _orderItemRepo = productRepo;
             _logger = logger;
         }
 
         public OrderItem CreateOrderItem(string userId, OrderItemModel item)
         {
-            var newOrder = _orderItemRepo.Create(new OrderItem()
+            if (_orderRepo.FindById(item.OrderId)?.State == (int)OrderStatus.New)
             {
-                Name = item.Name,
-                Price = item.Price,
-                ProductId = item.ProductId,
-                Remark = item.Remark,
-                CreatedAt = DateTime.UtcNow,
-                CreatedBy = userId,
-                OrderId = item.OrderId,
-                OrderItemOptions = item.Options.Select(x => new OrderItemOption()
+                var newOrder = _orderItemRepo.Create(new OrderItem()
                 {
-                    Name = x.Name,
-                    Value = x.Value
-                }).ToList()
-            });
+                    Name = item.Name,
+                    Price = item.Price,
+                    ProductId = item.ProductId,
+                    Remark = item.Remark,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = userId,
+                    OrderId = item.OrderId,
+                    OrderItemOptions = item.Options.Select(x => new OrderItemOption()
+                    {
+                        Name = x.Name,
+                        Value = x.Value
+                    }).ToList()
+                });
 
-            return newOrder;
+                return newOrder;
+            }
+
+            return null;
         }
 
         public OrderItem GetOrderItem(int orderItemId)
         {
-            var item = _orderItemRepo.FindByAlipayId(orderItemId);
+            var item = _orderItemRepo.FindById(orderItemId);
             return item;
         }
 
@@ -55,7 +62,13 @@ namespace BookingOffline.Services
 
         public bool RemoveOrderItem(int orderItemId, string userId)
         {
-            return _orderItemRepo.Delete(orderItemId, userId);
+            var item = _orderItemRepo.FindById(orderItemId);
+            if (_orderRepo.FindById(item?.OrderId)?.State == (int)OrderStatus.New)
+            {
+                return _orderItemRepo.Delete(orderItemId, userId);
+            }
+
+            return false;
         }
     }
 }

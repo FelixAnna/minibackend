@@ -5,7 +5,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace BookingOffline.Web.Configuration
+namespace BookingOffline.Web.Middlewares
 {
     public class GlobalExceptionHandler
     {

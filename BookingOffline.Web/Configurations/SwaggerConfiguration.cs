@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace BookingOffline.Web.Configuration
+namespace BookingOffline.Web.Configurations
 {
     public static class SwaggerConfiguration
     {
@@ -13,7 +13,7 @@ namespace BookingOffline.Web.Configuration
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BookingOffline", Version = "v1" });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Name = "Authorization",
+                    Name = "",
                     Type = SecuritySchemeType.ApiKey,
                     Scheme = "Bearer",
                     BearerFormat = "JWT",

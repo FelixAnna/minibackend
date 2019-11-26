@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using BookingOffline.Entities;
 
 namespace BookingOffline.Repositories.Interfaces
@@ -6,5 +7,7 @@ namespace BookingOffline.Repositories.Interfaces
     public interface IOrderRepository : IRepository<Order, string>
     {
         IQueryable<Order> FindAll(string userId);
+        Task LockOrderAsync(Order order);
+        Task UnlockOrderAsync(Order order);
     }
 }

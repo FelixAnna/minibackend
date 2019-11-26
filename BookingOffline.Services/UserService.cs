@@ -1,9 +1,6 @@
-﻿using BookingOffline.Entities;
-using BookingOffline.Repositories.Interfaces;
+﻿using BookingOffline.Repositories.Interfaces;
+using BookingOffline.Services.Models;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BookingOffline.Services
@@ -17,6 +14,20 @@ namespace BookingOffline.Services
         {
             _logger = logger;
             _userRepo = userRepo;
+        }
+
+        public UserResultModel GetUserInfo(string userId)
+        {
+            var user = _userRepo.FindById(userId);
+            return new UserResultModel()
+            {
+                Id=user.Id,
+                AlipayName=user.AlipayName,
+                AlibabaUserId=user.AlibabaUserId,
+                AlipayPhoto=user.AlipayPhoto,
+                AlipayUserId=user.AlipayUserId,
+                CreatedAt=user.CreatedAt
+            };
         }
 
         public async Task UpdateAlipayUser(string userId, string nickName, string photo)

@@ -10,5 +10,6 @@ namespace BookingOffline.Repositories.Interfaces
         IQueryable<AlipayUser> FindAll(params string[] userIds);
 
         Task UpdateAsync(string userId, string nickName, string photo);
+        AlipayUser FindByAlipayId(string alipayUserId);
     }
 }

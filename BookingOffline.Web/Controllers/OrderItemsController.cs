@@ -27,7 +27,11 @@ namespace BookingOffline.Web.Controllers
         public ActionResult CreateOrderItem([FromBody]OrderItemModel model)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var order = _service.CreateOrderItem(userId, model);
+            var orderItem = _service.CreateOrderItem(userId, model);
+            if(orderItem == null)
+            {
+                throw new Exception($"Failed to create orderItem for order: {model.OrderId}");
+            }
             return Ok();
         }
 
@@ -44,31 +48,6 @@ namespace BookingOffline.Web.Controllers
                 return Ok();
             else
                 throw new Exception($"Failed to remove orderItem: {orderItemId}");
-        }
-
-        [HttpGet]
-        public ActionResult GetOrderItem(int orderItemId)
-        {
-            var item = _service.GetOrderItem(orderItemId);
-            if (item != null)
-            {
-                return Ok(item);
-            }
-
-            return NotFound();
-        }
-
-        [HttpGet("list")]
-        public ActionResult GetOrderItems(string orderId)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var items = _service.GetOrderItems(orderId);
-            if (items.Any())
-            {
-                return Ok(items);
-            }
-
-            return NotFound();
         }
     }
 }

@@ -1,6 +1,7 @@
 using BookingOffline.Common;
 using BookingOffline.Services;
-using BookingOffline.Web.Configuration;
+using BookingOffline.Web.Configurations;
+using BookingOffline.Web.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +36,7 @@ namespace BookingOffline.Web
         {
             app.UseMiddleware<GlobalExceptionHandler>();
 
+            app.UseMiddleware<FakeTokenMiddleware>();
             app.UseSwaggerUI();
 
             //app.UseHttpsRedirection();
@@ -45,7 +47,6 @@ namespace BookingOffline.Web
                .AllowAnyOrigin()
                .AllowAnyMethod()
                .AllowAnyHeader());
-
             //app.UseMiddleware<CustomMiddleware>();
             app.UseJwtAuthenticaton();
 

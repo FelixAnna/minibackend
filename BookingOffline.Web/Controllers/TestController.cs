@@ -31,9 +31,23 @@ namespace BookingOffline.Web.Controllers
             return Ok(new { token = tokenStr });
         }
 
+        [HttpGet("running")]
+        [AllowAnonymous]
+        public IActionResult Running()
+        {
+            return Ok(new { State = "succeed" });
+        }
+
         [HttpGet("protected")]
         [Authorize]
         public IActionResult Protected()
+        {
+            return Ok(new { State = "succeed" });
+        }
+
+        [HttpGet("unprotected")]
+        [AllowAnonymous]
+        public IActionResult UnProtected()
         {
             return Ok(new { State = "succeed" });
         }

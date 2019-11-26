@@ -4,7 +4,7 @@ namespace BookingOffline.Repositories.Interfaces
 {
     public interface IRepository<TEntity, TKey>
     {
-        TEntity FindByAlipayId(TKey key);
+        TEntity FindById(TKey key);
         TEntity Create(TEntity item);
         bool Delete(TKey key, string userId);
     }

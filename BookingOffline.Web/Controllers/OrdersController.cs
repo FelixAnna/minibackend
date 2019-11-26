@@ -3,7 +3,6 @@ using BookingOffline.Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Linq;
 using System.Security.Claims;
 
 namespace BookingOffline.Web.Controllers
@@ -44,6 +43,32 @@ namespace BookingOffline.Web.Controllers
                 return Ok();
             else
                 throw new Exception($"Failed to remove order: {orderId}");
+        }
+
+        /// <summary>
+        /// Lock an order if it is unlockeds
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [HttpPost("{orderId}/lock")]
+        public ActionResult LockOrder([FromRoute]string orderId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _service.LockOrder(orderId, userId);
+            return Ok();
+        }
+
+        /// <summary>
+        /// Unlock an order if it is locked
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [HttpPost("{orderId}/unlock")]
+        public ActionResult UnlockOrder([FromRoute]string orderId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var orders = _service.UnlockOrder(orderId, userId);
+            return Ok();
         }
 
         /// <summary>

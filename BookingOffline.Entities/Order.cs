@@ -5,6 +5,11 @@ namespace BookingOffline.Entities
 {
     public class Order
     {
+        public Order()
+        {
+            State = (int)OrderStatus.New;
+        }
+
         public string OrderId { get; set; }
 
         public int? ShopId { get; set; }

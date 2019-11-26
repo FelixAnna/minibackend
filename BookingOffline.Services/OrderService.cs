@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BookingOffline.Services
 {
@@ -13,38 +14,36 @@ namespace BookingOffline.Services
     {
         private readonly ILogger<OrderService> _logger;
         private readonly IOrderRepository _orderRepo;
-        private readonly IOrderItemRepository _productRepo;
         private readonly IAlipayUserRepository _userRepository;
-        public OrderService(IOrderRepository orderRepo, IOrderItemRepository productRepo, IAlipayUserRepository userRepository, ILogger<OrderService> logger)
+        public OrderService(IOrderRepository orderRepo, IAlipayUserRepository userRepository, ILogger<OrderService> logger)
         {
             _orderRepo = orderRepo;
-            _productRepo = productRepo;
             _userRepository = userRepository;
             _logger = logger;
         }
 
-        public Order CreateOrder(string userId, OrderModel order)
+        public OrderResultModel CreateOrder(string userId, OrderModel order)
         {
-            if (_orderRepo.FindByAlipayId(order.OrderId) != null)
+            if (_orderRepo.FindById(order.OrderId) != null)
             {
                 throw new Exception($"Order already exists: {order.OrderId}");
             }
 
             var newOrder = _orderRepo.Create(new Order()
             {
-                State = 1,
                 CreatedAt = DateTime.UtcNow,
                 CreatedBy = userId,
                 OrderId = order.OrderId,
                 ShopId = order.ShopId
             });
 
-            return newOrder;
+            var users = _userRepository.FindAll(new[] { userId }).ToList();
+            return OrderResultModel.FromOrder(newOrder, users);
         }
 
         public OrderResultModel GetOrder(string orderId)
         {
-            var order = _orderRepo.FindByAlipayId(orderId);
+            var order = _orderRepo.FindById(orderId);
             if (order == null)
             {
                 return null;
@@ -87,6 +86,32 @@ namespace BookingOffline.Services
         public bool RemoveOrder(string orderId, string userId)
         {
             return _orderRepo.Delete(orderId, userId);
+        }
+
+        public async Task<bool> LockOrder(string orderId, string userId)
+        {
+            var order = _orderRepo.FindById(orderId);
+            if (order == null)
+            {
+                return false;
+            }
+
+            await _orderRepo.LockOrderAsync(order);
+            _logger.LogInformation($"User {userId} locked the order {orderId}");
+            return true;
+        }
+
+        public async Task<bool> UnlockOrder(string orderId, string userId)
+        {
+            var order = _orderRepo.FindById(orderId);
+            if (order == null)
+            {
+                return false;
+            }
+
+            await _orderRepo.UnlockOrderAsync(order);
+            _logger.LogInformation($"User {userId} unlocked the order {orderId}");
+            return true;
         }
     }
 }

@@ -28,5 +28,15 @@ namespace BookingOffline.Web.Controllers
 
             return Ok();
         }
+
+        [Authorize]
+        [HttpGet("alipay/info")]
+        public IActionResult GetUserInfo()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user=_userService.GetUserInfo(userId);
+
+            return Ok(user);
+        }
     }
 }

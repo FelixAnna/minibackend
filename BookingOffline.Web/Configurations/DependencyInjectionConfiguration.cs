@@ -5,7 +5,7 @@ using BookingOffline.Services;
 using BookingOffline.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BookingOffline.Web.Configuration
+namespace BookingOffline.Web.Configurations
 {
     public static class DependencyInjectionConfiguration
     {

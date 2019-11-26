@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BookingOffline.Repositories
 {
@@ -16,7 +17,7 @@ namespace BookingOffline.Repositories
             _context = context;
         }
 
-        public Order FindByAlipayId(string key)
+        public Order FindById(string key)
         {
             return _context.Orders
                 .Include(o => o.OrderItems)
@@ -59,6 +60,20 @@ namespace BookingOffline.Repositories
                 .Include(o => o.OrderItems)
                     .ThenInclude(a => a.OrderItemOptions)
                 .Where(x => x.CreatedBy == userId || x.OrderItems.Any(y => y.CreatedBy == userId));
+        }
+
+        public async Task LockOrderAsync(Order order)
+        {
+            order.State = (int)OrderStatus.Locked;
+            _context.Entry(order).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UnlockOrderAsync(Order order)
+        {
+            order.State = (int)OrderStatus.New;
+            _context.Entry(order).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -39,6 +39,12 @@ namespace BookingOffline.Repositories
             return user;
         }
 
+        public AlipayUser FindById(string userId)
+        {
+            var user = _context.AlipayUsers.FirstOrDefault(x => x.Id == userId);
+            return user;
+        }
+
         public async Task UpdateAsync(string userId, string nickName, string photo)
         {
             var user = _context.AlipayUsers.FirstOrDefault(x => x.Id == userId);
