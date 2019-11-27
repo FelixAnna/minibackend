@@ -21,12 +21,15 @@ namespace BookingOffline.Web.Controllers
 
         [Authorize]
         [HttpPost("alipay")]
-        public IActionResult UpdateAlipayUser([FromQuery]string name, [FromQuery]string photo)
+        public async Task<IActionResult> UpdateAlipayUserAsync([FromQuery]string name, [FromQuery]string photo)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            _userService.UpdateAlipayUser(userId, name, photo);
+            if (await _userService.UpdateAlipayUserAsync(userId, name, photo))
+            {
+                return Ok();
+            }
 
-            return Ok();
+            return NotFound();
         }
 
         [Authorize]
@@ -34,7 +37,7 @@ namespace BookingOffline.Web.Controllers
         public IActionResult GetUserInfo()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user=_userService.GetUserInfo(userId);
+            var user = _userService.GetUserInfo(userId);
 
             return Ok(user);
         }

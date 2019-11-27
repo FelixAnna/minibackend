@@ -45,17 +45,10 @@ namespace BookingOffline.Repositories
             return user;
         }
 
-        public async Task UpdateAsync(string userId, string nickName, string photo)
+        public async Task UpdateAsync(AlipayUser user)
         {
-            var user = _context.AlipayUsers.FirstOrDefault(x => x.Id == userId);
-            if (user != null)
-            {
-                user.AlipayName = nickName;
-                user.AlipayPhoto = photo;
-
-                _context.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                await _context.SaveChangesAsync();
-            }
+            _context.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
     }
 }

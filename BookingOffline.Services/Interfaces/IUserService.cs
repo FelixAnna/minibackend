@@ -5,7 +5,7 @@ namespace BookingOffline.Services
 {
     public interface IUserService
     {
-        Task UpdateAlipayUser(string userId, string nickName, string photo);
+        Task<bool> UpdateAlipayUserAsync(string userId, string nickName, string photo);
         UserResultModel GetUserInfo(string userId);
     }
 }

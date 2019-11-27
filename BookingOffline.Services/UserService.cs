@@ -30,9 +30,19 @@ namespace BookingOffline.Services
             };
         }
 
-        public async Task UpdateAlipayUser(string userId, string nickName, string photo)
+        public async Task<bool> UpdateAlipayUserAsync(string userId, string nickName, string photo)
         {
-            await _userRepo.UpdateAsync(userId, nickName, photo);
+            var user = _userRepo.FindById(userId);
+            if(user == null)
+            {
+                _logger.LogError($"User {userId} not exists.");
+                return false;
+            }
+
+            user.AlipayName = nickName;
+            user.AlipayPhoto = photo;
+            await _userRepo.UpdateAsync(user);
+            return true;
         }
     }
 }
