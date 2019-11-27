@@ -87,7 +87,14 @@ namespace BookingOffline.Services
 
         public bool RemoveOrder(string orderId, string userId)
         {
-            return _orderRepo.Delete(orderId, userId);
+            if (_orderRepo.Delete(orderId, userId))
+            {
+                return true;
+            }
+            else
+            {
+                throw new Exception($"Failed to remove order: {orderId}");
+            }
         }
 
         public async Task<bool> LockOrder(string orderId, string userId)

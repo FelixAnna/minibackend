@@ -13,10 +13,10 @@ namespace BookingOffline.Services.Models
         public int? ShopId { get; set; }
 
         public int State { get; set; }
-        public List<OrderItemResultModel> Items { get; set; }
+        public List<OrderItemResultModel> ProductList { get; set; }
 
         public DateTime CreatedAt { get; set; }
-        public string OwnerId { get; set; }
+        public string CreatedBy { get; set; }
         public string OwnerName { get; set; }
 
         public static OrderResultModel FromOrder(Order order, IEnumerable<AlipayUser> users)
@@ -26,9 +26,9 @@ namespace BookingOffline.Services.Models
                 OrderId = order.OrderId,
                 ShopId = order.ShopId,
                 State = order.State,
-                Items = order.OrderItems?.Select(x => OrderItemResultModel.FromOrderItem(x, users)).ToList() ?? new List<OrderItemResultModel>(),
+                ProductList = order.OrderItems?.Select(x => OrderItemResultModel.FromOrderItem(x, users)).ToList() ?? new List<OrderItemResultModel>(),
                 CreatedAt = order.CreatedAt,
-                OwnerId = order.CreatedBy,
+                CreatedBy = order.CreatedBy,
                 OwnerName = users.FirstOrDefault(x => x.Id == order.CreatedBy)?.AlipayName
             };
 

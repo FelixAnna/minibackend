@@ -26,7 +26,7 @@ namespace BookingOffline.Services
         {
             if (_orderRepo.FindById(item.OrderId)?.State == (int)OrderStatus.New)
             {
-                var newOrder = _orderItemRepo.Create(new OrderItem()
+                var newOrderItem = _orderItemRepo.Create(new OrderItem()
                 {
                     Name = item.Name,
                     Price = item.Price,
@@ -42,10 +42,12 @@ namespace BookingOffline.Services
                     }).ToList()
                 });
 
-                return newOrder;
+                return newOrderItem;
             }
-
-            return null;
+            else
+            {
+                throw new Exception($"Failed to create orderItem for order: {item.OrderId}");
+            }
         }
 
         public OrderItem GetOrderItem(int orderItemId)
@@ -63,12 +65,15 @@ namespace BookingOffline.Services
         public bool RemoveOrderItem(int orderItemId, string userId)
         {
             var item = _orderItemRepo.FindById(orderItemId);
-            if (_orderRepo.FindById(item?.OrderId)?.State == (int)OrderStatus.New)
+            if (_orderRepo.FindById(item?.OrderId)?.State == (int)OrderStatus.New
+                && _orderItemRepo.Delete(orderItemId, userId))
             {
-                return _orderItemRepo.Delete(orderItemId, userId);
+                return true;
             }
-
-            return false;
+            else
+            {
+                throw new Exception($"Failed to remove orderItem: {orderItemId}");
+            }
         }
     }
 }

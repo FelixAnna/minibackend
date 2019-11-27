@@ -39,10 +39,9 @@ namespace BookingOffline.Web.Controllers
         public ActionResult RemoveOrder([FromQuery]string orderId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (_service.RemoveOrder(orderId, userId))
-                return Ok();
-            else
-                throw new Exception($"Failed to remove order: {orderId}");
+            _service.RemoveOrder(orderId, userId);
+            return Ok();
+
         }
 
         /// <summary>
@@ -89,7 +88,7 @@ namespace BookingOffline.Web.Controllers
         }
 
         [HttpGet("list")]
-        public ActionResult GetOrders(int page=1, int size=10)
+        public ActionResult GetOrders(int page = 1, int size = 10)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var orders = _service.GetOrders(userId, page, size);
