@@ -36,7 +36,7 @@ namespace BookingOffline.Web
         {
             app.UseMiddleware<GlobalExceptionHandler>();
 
-            app.UseMiddleware<FakeTokenMiddleware>();
+            //app.UseMiddleware<FakeTokenMiddleware>();
             app.UseSwaggerUI();
 
             //app.UseHttpsRedirection();

@@ -22,7 +22,7 @@ namespace BookingOffline.Services.Models
         [JsonProperty("nickName")]
         public string NickName { get; set; }
 
-        [JsonProperty("photo")]
+        [JsonProperty("avatar")]
         public string Photo { get; set; }
     }
 }
