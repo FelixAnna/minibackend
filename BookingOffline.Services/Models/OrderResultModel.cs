@@ -51,6 +51,7 @@ namespace BookingOffline.Services.Models
 
         public DateTime CreatedAt { get; set; }
         public string OwnerId { get; set; }
+        public string OwnerAvatar { get; set; }
         public string OwnerName { get; set; }
 
         public static OrderItemResultModel FromOrderItem(OrderItem iten, IEnumerable<AlipayUser> users)
@@ -65,6 +66,7 @@ namespace BookingOffline.Services.Models
                 Options = iten.OrderItemOptions?.Select(OrderItemOptionsResultModel.FromOrderItenOption).ToList() ?? new List<OrderItemOptionsResultModel>(),
                 CreatedAt = iten.CreatedAt,
                 OwnerId = iten.CreatedBy,
+                OwnerAvatar = users.FirstOrDefault(x => x.Id == iten.CreatedBy)?.AlipayPhoto,
                 OwnerName = users.FirstOrDefault(x => x.Id == iten.CreatedBy)?.AlipayName
             };
 
