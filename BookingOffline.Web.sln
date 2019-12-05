@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingOffline.Services", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingOffline.Common", "BookingOffline.Common\BookingOffline.Common.csproj", "{10CE8AF6-83C9-46C0-A252-38CB0991C5EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingOffline.Repositories", "BookingOffline.Repositories\BookingOffline.Repositories.csproj", "{6BFB6F5B-B20F-44D4-A476-F4B7046EE386}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingOffline.Repositories", "BookingOffline.Repositories\BookingOffline.Repositories.csproj", "{6BFB6F5B-B20F-44D4-A476-F4B7046EE386}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingOffline.Entities", "BookingOffline.Entities\BookingOffline.Entities.csproj", "{38CBD263-A6F7-402A-BDBE-96049FE812A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingOffline.Entities", "BookingOffline.Entities\BookingOffline.Entities.csproj", "{38CBD263-A6F7-402A-BDBE-96049FE812A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingOfflline.Services.Tests", "BookingOfflline.Services.Tests\BookingOfflline.Services.Tests.csproj", "{A9E6D834-9EFF-45A4-949A-D29EC41E35A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{38CBD263-A6F7-402A-BDBE-96049FE812A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38CBD263-A6F7-402A-BDBE-96049FE812A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38CBD263-A6F7-402A-BDBE-96049FE812A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9E6D834-9EFF-45A4-949A-D29EC41E35A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9E6D834-9EFF-45A4-949A-D29EC41E35A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9E6D834-9EFF-45A4-949A-D29EC41E35A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9E6D834-9EFF-45A4-949A-D29EC41E35A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
