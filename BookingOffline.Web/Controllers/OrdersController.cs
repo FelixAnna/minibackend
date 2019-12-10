@@ -88,10 +88,10 @@ namespace BookingOffline.Web.Controllers
         }
 
         [HttpGet("list")]
-        public ActionResult GetOrders(int page = 1, int size = 10)
+        public ActionResult GetOrders(int page = 1, int size = 10,DateTime? startDate=null, DateTime? endDate=null)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var orders = _service.GetOrders(userId, page, size);
+            var orders = _service.GetOrders(userId, page, size, startDate, endDate);
             if (orders.TotalCount > 0)
             {
                 return Ok(orders);
