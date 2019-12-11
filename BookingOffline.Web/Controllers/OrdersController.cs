@@ -91,7 +91,7 @@ namespace BookingOffline.Web.Controllers
         public ActionResult GetOrders(int page = 1, int size = 10,DateTime? startDate=null, DateTime? endDate=null)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var orders = _service.GetOrders(userId, page, size, startDate, endDate);
+            var orders = _service.GetOrders(userId, startDate, endDate, page, size);
             if (orders.TotalCount > 0)
             {
                 return Ok(orders);

@@ -49,7 +49,7 @@ namespace BookingOffline.Services
             {
                 BOToken = tokenStr,
                 AccessToken = response.AccessToken,
-                ExpiresIn = response.ReExpiresIn,
+                ExpiresIn = response.ExpiresIn,
                 ReExpiresIn = response.ReExpiresIn,
                 RefreshToken = response.RefreshToken,
                 UserId = alipayUser.Id,

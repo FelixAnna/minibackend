@@ -62,9 +62,18 @@ namespace BookingOffline.Services
             return result;
         }
 
-        public OrderCollectionResultModel GetOrders(string userId, int page = 1, int size = 10)
+        public OrderCollectionResultModel GetOrders(string userId, DateTime? startDate = null, DateTime? endDate = null, int page = 1, int size = 10)
         {
-            var orders = _orderRepo.FindAll(userId).ToArray();
+            var orders = _orderRepo.FindAll(userId);
+            if (startDate.HasValue)
+            {
+                orders = orders.Where(x => x.CreatedAt > startDate);
+            }
+
+            if (endDate.HasValue)
+            {
+                orders = orders.Where(x => x.CreatedAt < endDate.Value.AddDays(1));
+            }
 
             var returnedOrders = orders?.Skip((page - 1) * size).Take(size).ToList();
             var users = new List<AlipayUser>();

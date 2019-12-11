@@ -4,6 +4,7 @@ using BookingOffline.Services;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using FakeItEasy;
+using BookingOffline.Entities;
 
 namespace BookingOfflline.Services.Tests
 {
@@ -28,13 +29,58 @@ namespace BookingOfflline.Services.Tests
         }
 
         [Test]
-        public void LoginMiniAlipay_WhenFailed_ThenError()
+        public void LoginMiniAlipay_WhenAlipayFailed_ThenReturnNull()
         {
-            A.CallTo(() => _alipayService.GetUserIdByCode(A<string>.Ignored)).Returns(new Alipay.AopSdk.Core.Response.AlipaySystemOauthTokenResponse() { Code = "error" });
+            var fakeAlipayResponse = FakeDataHelper.GetFakeAlipayResponse(success: false);
+            A.CallTo(() => _alipayService.GetUserIdByCode(A<string>.Ignored)).Returns(fakeAlipayResponse);
 
-            var result = _service.LoginMiniAlipay(A<string>.Ignored);
+            var result = _service.LoginMiniAlipay("anycode");
 
-            Assert.Pass();
+            Assert.IsNull(result);
+            A.CallTo(() => _alipayService.GetUserIdByCode(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _userRepo.FindByAlipayId(A<string>.Ignored)).MustNotHaveHappened();
+        }
+
+        [Test]
+        public void LoginMiniAlipay_WhenUserNotExists_ThenShouldCreateUser()
+        {
+            string fakeToken = "fakeToken";
+            var fakeAlipayResponse = FakeDataHelper.GetFakeAlipayResponse(success: true);
+            var fakeUserResult = FakeDataHelper.GetFakeAlipayUserById(success: false);
+            A.CallTo(() => _alipayService.GetUserIdByCode(A<string>.Ignored)).Returns(fakeAlipayResponse);
+            A.CallTo(() => _userRepo.FindByAlipayId(A<string>.Ignored)).Returns(fakeUserResult);
+            A.CallTo(() => _userRepo.Create(A<AlipayUser>.Ignored)).Returns(new AlipayUser());
+            A.CallTo(() => _tokenService.CreateJwtToken(A<AlipayUser>.Ignored)).Returns(fakeToken);
+
+            var result = _service.LoginMiniAlipay("anycode");
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.BOToken, fakeToken);
+            A.CallTo(() => _alipayService.GetUserIdByCode(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _userRepo.FindByAlipayId(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _userRepo.Create(A<AlipayUser>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _tokenService.CreateJwtToken(A<AlipayUser>.Ignored)).MustHaveHappenedOnceExactly();
+        }
+
+        [Test]
+        public void LoginMiniAlipay_WhenUserExists_ThenShouldNotCreateUser()
+        {
+            string fakeToken = "fakeToken";
+            var fakeAlipayResponse = FakeDataHelper.GetFakeAlipayResponse(success:true);
+            var fakeUserResult = FakeDataHelper.GetFakeAlipayUserById(success:true);
+            A.CallTo(() => _alipayService.GetUserIdByCode(A<string>.Ignored)).Returns(fakeAlipayResponse);
+            A.CallTo(() => _userRepo.FindByAlipayId(A<string>.Ignored)).Returns(fakeUserResult);
+            A.CallTo(() => _userRepo.Create(A<AlipayUser>.Ignored)).Returns(fakeUserResult);
+            A.CallTo(() => _tokenService.CreateJwtToken(A<AlipayUser>.Ignored)).Returns(fakeToken);
+
+            var result = _service.LoginMiniAlipay("anycode");
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.BOToken, fakeToken);
+            A.CallTo(() => _alipayService.GetUserIdByCode(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _userRepo.FindByAlipayId(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _userRepo.Create(A<AlipayUser>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => _tokenService.CreateJwtToken(A<AlipayUser>.Ignored)).MustHaveHappenedOnceExactly();
         }
     }
 }
