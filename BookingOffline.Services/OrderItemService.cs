@@ -4,7 +4,6 @@ using BookingOffline.Services.Interfaces;
 using BookingOffline.Services.Models;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace BookingOffline.Services
@@ -48,18 +47,6 @@ namespace BookingOffline.Services
             {
                 throw new Exception($"Failed to create orderItem for order: {item.OrderId}");
             }
-        }
-
-        public OrderItem GetOrderItem(int orderItemId)
-        {
-            var item = _orderItemRepo.FindById(orderItemId);
-            return item;
-        }
-
-        public IList<OrderItem> GetOrderItems(string orderId)
-        {
-            var orderItems = _orderItemRepo.FindAll(orderId);
-            return orderItems?.Skip(0).Take(100).ToList();
         }
 
         public bool RemoveOrderItem(int orderItemId, string userId)

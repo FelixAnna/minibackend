@@ -40,7 +40,7 @@ namespace BookingOffline.Services.Models
                 CreatedAt = order.CreatedAt,
                 OwnerId = order.CreatedBy,
                 OwnerName = user?.AlipayName,
-                OwnerAvatar=user.AlipayPhoto
+                OwnerAvatar=user?.AlipayPhoto
             };
         }
     }

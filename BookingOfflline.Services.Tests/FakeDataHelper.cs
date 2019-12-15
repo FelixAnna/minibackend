@@ -41,5 +41,28 @@ namespace BookingOfflline.Services.Tests
 
             return new AlipayUser();
         }
+
+        public static Order GetFakeOrder(bool success = true)
+        {
+            if (success)
+            {
+                return new Order() { State = 1, OrderItems = new List<OrderItem>() };
+            }
+
+            return null;
+        }
+
+        public static OrderItem GetFakeOrderItem(bool success = true)
+        {
+            if (success)
+            {
+                return new OrderItem()
+                {
+                    OrderItemOptions = new List<OrderItemOption>()
+                };
+            }
+
+            return null;
+        }
     }
 }
