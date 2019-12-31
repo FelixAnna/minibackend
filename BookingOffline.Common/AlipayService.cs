@@ -6,7 +6,7 @@ namespace BookingOffline.Common
 {
     public class AlipayService : IAlipayService
     {
-        public AlipayService(string privateKey, string publicKey, string appId)
+        public AlipayService(string appId, string privateKey, string publicKey)
         {
             this.privateKey = privateKey;
             this.alipayPublicKey = publicKey;
