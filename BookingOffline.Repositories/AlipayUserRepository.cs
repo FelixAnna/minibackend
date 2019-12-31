@@ -12,6 +12,7 @@ namespace BookingOffline.Repositories
         public AlipayUserRepository(SQLiteDBContext context)
         {
             _context = context;
+            _context.Database.EnsureCreated();
         }
 
         public AlipayUser Create(AlipayUser user)
