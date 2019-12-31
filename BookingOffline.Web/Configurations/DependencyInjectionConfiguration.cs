@@ -28,7 +28,7 @@ namespace BookingOffline.Web.Configurations
 
         public static void AddCommonSevices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IAlipayService, AlipayService>(provider => new AlipayService(configuration["alipay::appId"], configuration["alipay::privateKey"], configuration["alipay::publicKey"]));
+            services.AddScoped<IAlipayService, AlipayService>(provider => new AlipayService(configuration["Alipay:AppId"], configuration["Alipay:PrivateKey"], configuration["Alipay:PublicKey"]));
             services.AddScoped<ITokenGeneratorService, TokenGeneratorService>();
         }
     }
