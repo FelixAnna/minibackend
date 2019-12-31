@@ -37,7 +37,7 @@ namespace BookingOffline.Services
             {
                 alipayUser = _userRepo.Create(new AlipayUser()
                 {
-                    Id = "yufelix",
+                    Id = Guid.NewGuid().ToString(),
                     AlibabaUserId = response.UserId,
                     AlipayUserId = response.AlipayUserId,
                     CreatedAt = DateTime.UtcNow
