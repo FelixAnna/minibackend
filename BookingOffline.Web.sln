@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingOffline.Repositories
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingOffline.Entities", "BookingOffline.Entities\BookingOffline.Entities.csproj", "{38CBD263-A6F7-402A-BDBE-96049FE812A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingOfflline.Services.Tests", "BookingOfflline.Services.Tests\BookingOfflline.Services.Tests.csproj", "{A9E6D834-9EFF-45A4-949A-D29EC41E35A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingOffline.Services.Tests", "BookingOfflline.Services.Tests\BookingOffline.Services.Tests.csproj", "{A9E6D834-9EFF-45A4-949A-D29EC41E35A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -6,7 +6,7 @@ using NUnit.Framework;
 using FakeItEasy;
 using BookingOffline.Entities;
 
-namespace BookingOfflline.Services.Tests
+namespace BookingOffline.Services.Tests
 {
     public class LoginServiceTests
     {

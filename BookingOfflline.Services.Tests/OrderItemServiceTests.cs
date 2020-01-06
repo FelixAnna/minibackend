@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BookingOfflline.Services.Tests
+namespace BookingOffline.Services.Tests
 {
     class OrderItemServiceTests
     {
