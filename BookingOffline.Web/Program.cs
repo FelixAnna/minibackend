@@ -34,7 +34,8 @@ namespace BookingOffline.Web
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
-                    logging.SetMinimumLevel(LogLevel.Trace);
+                    logging.SetMinimumLevel(LogLevel.Information);
+                    logging.AddAzureWebAppDiagnostics();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
