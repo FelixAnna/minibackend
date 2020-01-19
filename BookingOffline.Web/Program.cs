@@ -37,8 +37,8 @@ namespace BookingOffline.Web
                 {
                     logging.ClearProviders();
                     logging.SetMinimumLevel(LogLevel.Information);
-                    //logging.AddFilter("Microsoft", LogLevel.Warning);
-                    //logging.AddFilter("System", LogLevel.Warning);
+                    logging.AddFilter("Microsoft", LogLevel.Warning);
+                    logging.AddFilter("System", LogLevel.Warning);
                     logging.AddAzureWebAppDiagnostics();
                 })
                 .ConfigureServices(serviceCollection => serviceCollection
