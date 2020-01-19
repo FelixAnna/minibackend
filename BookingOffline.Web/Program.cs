@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.AzureAppServices;
 using NLog.Web;
 using System;
 
@@ -35,8 +37,21 @@ namespace BookingOffline.Web
                 {
                     logging.ClearProviders();
                     logging.SetMinimumLevel(LogLevel.Information);
+                    //logging.AddFilter("Microsoft", LogLevel.Warning);
+                    //logging.AddFilter("System", LogLevel.Warning);
                     logging.AddAzureWebAppDiagnostics();
                 })
+                .ConfigureServices(serviceCollection => serviceCollection
+                    .Configure<AzureFileLoggerOptions>(
+                            op =>
+                            {
+                                op.FileName = "bo-test-";
+                                op.FileSizeLimit = 50 * 1024;
+                                op.RetainedFileCountLimit = 10;
+                            }
+                        )
+                    .Configure<AzureBlobLoggerOptions>(op=>op.BlobName="bo_log.txt")
+                )
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
