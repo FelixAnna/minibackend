@@ -37,7 +37,7 @@ namespace BookingOffline.Services.Models
                 State = order.State,
                 TotalItems = order.OrderItems?.Count ?? 0,
                 TotalCost = order.OrderItems?.Sum(x=>x.Price) ?? 0,
-                CreatedAt = order.CreatedAt,
+                CreatedAt = order.CreatedAt.ToUniversalTime(),
                 OwnerId = order.CreatedBy,
                 OwnerName = user?.AlipayName,
                 OwnerAvatar=user?.AlipayPhoto
