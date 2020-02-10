@@ -64,7 +64,7 @@ namespace BookingOffline.Services.Models
                 Price = iten.Price,
                 Remark = iten.Remark,
                 Options = iten.OrderItemOptions?.Select(OrderItemOptionsResultModel.FromOrderItenOption).ToList() ?? new List<OrderItemOptionsResultModel>(),
-                CreatedAt = iten.CreatedAt,
+                CreatedAt = iten.CreatedAt.ToUniversalTime(),
                 OwnerId = iten.CreatedBy,
                 OwnerAvatar = users.FirstOrDefault(x => x.Id == iten.CreatedBy)?.AlipayPhoto,
                 OwnerName = users.FirstOrDefault(x => x.Id == iten.CreatedBy)?.AlipayName
