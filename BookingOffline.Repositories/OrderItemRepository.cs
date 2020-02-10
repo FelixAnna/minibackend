@@ -31,7 +31,8 @@ namespace BookingOffline.Repositories
         {
             var item = _context.OrderItems
                     .Include(a => a.OrderItemOptions)
-                    .FirstOrDefault(x => x.OrderItemId == key && x.CreatedBy == userId);
+                    .Include(a => a.Order)
+                    .FirstOrDefault(x => x.OrderItemId == key && (x.Order.CreatedBy == userId || x.CreatedBy == userId));
             if (item == null)
             {
                 return false;

@@ -102,6 +102,7 @@ namespace BookingOffline.Services
         {
             if (_orderRepo.Delete(orderId, userId))
             {
+                _logger.LogInformation($"User {userId} deleted the order {orderId}");
                 return true;
             }
             else

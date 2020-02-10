@@ -55,6 +55,7 @@ namespace BookingOffline.Services
             if (_orderRepo.FindById(item?.OrderId)?.State == (int)OrderStatus.New
                 && _orderItemRepo.Delete(orderItemId, userId))
             {
+                _logger.LogInformation($"User {userId} deleted the order {orderItemId}");
                 return true;
             }
             else
