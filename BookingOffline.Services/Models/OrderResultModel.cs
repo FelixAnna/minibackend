@@ -26,7 +26,7 @@ namespace BookingOffline.Services.Models
                 OrderId = order.OrderId,
                 ShopId = order.ShopId,
                 State = order.State,
-                ProductList = order.OrderItems?.Select(x => OrderItemResultModel.FromOrderItem(x, users)).ToList() ?? new List<OrderItemResultModel>(),
+                ProductList = order.OrderItems?.Select(x => OrderItemResultModel.FromOrderItem(x, users)).OrderByDescending(x=>x.CreatedAt).ToList() ?? new List<OrderItemResultModel>(),
                 CreatedAt = order.CreatedAt,
                 CreatedBy = order.CreatedBy,
                 OwnerName = users.FirstOrDefault(x => x.Id == order.CreatedBy)?.AlipayName
