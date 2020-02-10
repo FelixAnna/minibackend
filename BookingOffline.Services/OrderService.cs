@@ -28,6 +28,10 @@ namespace BookingOffline.Services
             {
                 throw new Exception($"Order already exists: {order.OrderId}");
             }
+            if (string.IsNullOrEmpty(order.OrderId))
+            {
+                throw new Exception($"OrderId cannot be null");
+            }
 
             var newOrder = _orderRepo.Create(new Order()
             {
