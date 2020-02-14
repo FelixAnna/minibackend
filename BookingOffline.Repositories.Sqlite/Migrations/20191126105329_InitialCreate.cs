@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace BookingOffline.Repositories.Migrations
+namespace BookingOffline.Repositories.Sqlite.Migrations
 {
     public partial class InitialCreate : Migration
     {

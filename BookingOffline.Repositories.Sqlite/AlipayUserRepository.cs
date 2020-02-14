@@ -4,12 +4,12 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BookingOffline.Repositories
+namespace BookingOffline.Repositories.Sqlite
 {
     public class AlipayUserRepository : IAlipayUserRepository
     {
-        private readonly SQLiteDBContext _context;
-        public AlipayUserRepository(SQLiteDBContext context)
+        private readonly BODBContext _context;
+        public AlipayUserRepository(BODBContext context)
         {
             _context = context;
             _context.Database.EnsureCreated();

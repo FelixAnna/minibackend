@@ -1,9 +1,9 @@
 ﻿using BookingOffline.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookingOffline.Repositories
+namespace BookingOffline.Repositories.Sqlite
 {
-    public class SQLiteDBContext : DbContext
+    public class BODBContext : DbContext
     {
         public DbSet<AlipayUser> AlipayUsers { get; set; }
         public DbSet<Order> Orders { get; set; }

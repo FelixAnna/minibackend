@@ -1,18 +1,15 @@
 ﻿using BookingOffline.Entities;
 using BookingOffline.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace BookingOffline.Repositories
+namespace BookingOffline.Repositories.SqlServer
 {
     public class OrderRepository : IOrderRepository
     {
-        private readonly SQLiteDBContext _context;
-        public OrderRepository(SQLiteDBContext context)
+        private readonly BODBContext _context;
+        public OrderRepository(BODBContext context)
         {
             _context = context;
         }

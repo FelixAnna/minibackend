@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingOffline.Entities", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingOffline.Services.Tests", "BookingOfflline.Services.Tests\BookingOffline.Services.Tests.csproj", "{A9E6D834-9EFF-45A4-949A-D29EC41E35A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingOffline.Repositories.SqlServer", "BookingOffline.Repositories.SqlServer\BookingOffline.Repositories.SqlServer.csproj", "{549AA24E-C1CB-45B5-B81F-7497E43C4F92}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingOffline.Repositories.Sqlite", "BookingOffline.Repositories.Sqlite\BookingOffline.Repositories.Sqlite.csproj", "{1DACAFDF-9BEF-4F7D-A16B-E4DA7643EFC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{A9E6D834-9EFF-45A4-949A-D29EC41E35A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9E6D834-9EFF-45A4-949A-D29EC41E35A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9E6D834-9EFF-45A4-949A-D29EC41E35A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{549AA24E-C1CB-45B5-B81F-7497E43C4F92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{549AA24E-C1CB-45B5-B81F-7497E43C4F92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{549AA24E-C1CB-45B5-B81F-7497E43C4F92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{549AA24E-C1CB-45B5-B81F-7497E43C4F92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DACAFDF-9BEF-4F7D-A16B-E4DA7643EFC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DACAFDF-9BEF-4F7D-A16B-E4DA7643EFC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DACAFDF-9BEF-4F7D-A16B-E4DA7643EFC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DACAFDF-9BEF-4F7D-A16B-E4DA7643EFC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

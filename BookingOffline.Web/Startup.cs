@@ -1,9 +1,11 @@
 using BookingOffline.Common;
+using BookingOffline.Repositories.SqlServer;
 using BookingOffline.Services;
 using BookingOffline.Web.Configurations;
 using BookingOffline.Web.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,6 +25,10 @@ namespace BookingOffline.Web
         {
             services.AddControllers()
                 .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.AddDbContext<BODBContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("BODatabase")));
+
             services.AddSwaggerUI();
             services.AddJwtAutentication(Configuration);
 

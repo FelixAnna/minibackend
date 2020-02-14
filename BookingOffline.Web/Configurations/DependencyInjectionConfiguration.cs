@@ -1,5 +1,5 @@
 ﻿using BookingOffline.Common;
-using BookingOffline.Repositories;
+using BookingOffline.Repositories.SqlServer; //or Sqlite
 using BookingOffline.Repositories.Interfaces;
 using BookingOffline.Services;
 using BookingOffline.Services.Interfaces;
@@ -23,7 +23,7 @@ namespace BookingOffline.Web.Configurations
             services.AddScoped<IAlipayUserRepository, AlipayUserRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderItemRepository, OrderItemRepository>();
-            services.AddScoped<SQLiteDBContext>();
+            services.AddScoped<BODBContext>();
         }
 
         public static void AddCommonSevices(this IServiceCollection services, IConfiguration configuration)

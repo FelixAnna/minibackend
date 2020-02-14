@@ -3,12 +3,12 @@ using BookingOffline.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace BookingOffline.Repositories
+namespace BookingOffline.Repositories.SqlServer
 {
     public class OrderItemRepository : IOrderItemRepository
     {
-        private readonly SQLiteDBContext _context;
-        public OrderItemRepository(SQLiteDBContext context)
+        private readonly BODBContext _context;
+        public OrderItemRepository(BODBContext context)
         {
             _context = context;
         }
