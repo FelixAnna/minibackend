@@ -50,6 +50,10 @@ namespace BookingOffline.Web.Middlewares
                 {
                     msg = "服务器错误";
                 }
+                else if (statusCode == 400)
+                {
+                    msg = "客户端错误";
+                }
                 else if (statusCode != 200)
                 {
                     msg = "未知错误";

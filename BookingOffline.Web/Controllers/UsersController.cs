@@ -24,6 +24,11 @@ namespace BookingOffline.Web.Controllers
         public async Task<IActionResult> UpdateAlipayUserAsync([FromQuery]string name, [FromQuery]string photo)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(name))
+            {
+                return BadRequest();
+            }
+
             if (await _userService.UpdateAlipayUserAsync(userId, name, photo))
             {
                 return Ok();
