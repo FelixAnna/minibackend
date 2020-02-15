@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace BookingOffline.Web.Controllers
 {
@@ -50,10 +51,10 @@ namespace BookingOffline.Web.Controllers
         /// <param name="orderId"></param>
         /// <returns></returns>
         [HttpPost("{orderId}/lock")]
-        public ActionResult LockOrder([FromRoute]string orderId)
+        public async Task<ActionResult> LockOrder([FromRoute]string orderId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            _service.LockOrder(orderId, userId);
+            await _service.LockOrderAsync(orderId, userId);
             return Ok();
         }
 
@@ -63,10 +64,10 @@ namespace BookingOffline.Web.Controllers
         /// <param name="orderId"></param>
         /// <returns></returns>
         [HttpPost("{orderId}/unlock")]
-        public ActionResult UnlockOrder([FromRoute]string orderId)
+        public async Task<ActionResult> UnlockOrder([FromRoute]string orderId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var orders = _service.UnlockOrder(orderId, userId);
+            var orders = await _service.UnlockOrderAsync(orderId, userId);
             return Ok();
         }
 

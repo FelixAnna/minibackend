@@ -111,7 +111,7 @@ namespace BookingOffline.Services
             }
         }
 
-        public async Task<bool> LockOrder(string orderId, string userId)
+        public async Task<bool> LockOrderAsync(string orderId, string userId)
         {
             var order = _orderRepo.FindById(orderId);
             if (order == null)
@@ -124,7 +124,7 @@ namespace BookingOffline.Services
             return true;
         }
 
-        public async Task<bool> UnlockOrder(string orderId, string userId)
+        public async Task<bool> UnlockOrderAsync(string orderId, string userId)
         {
             var order = _orderRepo.FindById(orderId);
             if (order == null)

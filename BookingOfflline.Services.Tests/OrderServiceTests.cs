@@ -149,7 +149,7 @@ namespace BookingOffline.Services.Tests
             var fakeOrder = FakeDataHelper.GetFakeOrder(false);
             A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).Returns(fakeOrder);
 
-            var result = _service.LockOrder("anyId", "anyUserId").Result;
+            var result = _service.LockOrderAsync("anyId", "anyUserId").Result;
 
             A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _orderRepo.LockOrderAsync(A<Order>.Ignored)).MustNotHaveHappened();
@@ -163,7 +163,7 @@ namespace BookingOffline.Services.Tests
             var fakeOrder = FakeDataHelper.GetFakeOrder(true);
             A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).Returns(fakeOrder);
 
-            var result = _service.LockOrder("anyId", "anyUserId").Result;
+            var result = _service.LockOrderAsync("anyId", "anyUserId").Result;
 
             A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _orderRepo.LockOrderAsync(A<Order>.Ignored)).MustHaveHappenedOnceExactly();
@@ -177,7 +177,7 @@ namespace BookingOffline.Services.Tests
             var fakeOrder = FakeDataHelper.GetFakeOrder(false);
             A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).Returns(fakeOrder);
 
-            var result = _service.UnlockOrder("anyId", "anyUserId").Result;
+            var result = _service.UnlockOrderAsync("anyId", "anyUserId").Result;
 
             A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _orderRepo.UnlockOrderAsync(A<Order>.Ignored)).MustNotHaveHappened();
@@ -191,7 +191,7 @@ namespace BookingOffline.Services.Tests
             var fakeOrder = FakeDataHelper.GetFakeOrder(true);
             A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).Returns(fakeOrder);
 
-            var result = _service.UnlockOrder("anyId", "anyUserId").Result;
+            var result = _service.UnlockOrderAsync("anyId", "anyUserId").Result;
 
             A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _orderRepo.UnlockOrderAsync(A<Order>.Ignored)).MustHaveHappenedOnceExactly();
