@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingOffline.Entities", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingOffline.Services.Tests", "BookingOfflline.Services.Tests\BookingOffline.Services.Tests.csproj", "{A9E6D834-9EFF-45A4-949A-D29EC41E35A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingOffline.Repositories.SqlServer", "BookingOffline.Repositories.SqlServer\BookingOffline.Repositories.SqlServer.csproj", "{549AA24E-C1CB-45B5-B81F-7497E43C4F92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingOffline.Repositories.SqlServer", "BookingOffline.Repositories.SqlServer\BookingOffline.Repositories.SqlServer.csproj", "{549AA24E-C1CB-45B5-B81F-7497E43C4F92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingOffline.Repositories.Sqlite", "BookingOffline.Repositories.Sqlite\BookingOffline.Repositories.Sqlite.csproj", "{1DACAFDF-9BEF-4F7D-A16B-E4DA7643EFC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingOffline.Repositories.Sqlite", "BookingOffline.Repositories.Sqlite\BookingOffline.Repositories.Sqlite.csproj", "{1DACAFDF-9BEF-4F7D-A16B-E4DA7643EFC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
