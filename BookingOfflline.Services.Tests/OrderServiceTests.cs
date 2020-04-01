@@ -41,22 +41,22 @@ namespace BookingOffline.Services.Tests
             A.CallTo(() => _orderRepo.Create(A<Order>.Ignored)).MustNotHaveHappened();
         }
 
-        [Test]
-        public void CreateOrder_WhenOrderNotExists_ThenSuccess()
-        {
-            var fakeOrder = FakeDataHelper.GetFakeOrder(false);
-            var fakeNewOrder = FakeDataHelper.GetFakeOrder(true);
-            A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).Returns(fakeOrder);
-            A.CallTo(() => _orderRepo.Create(A<Order>.Ignored)).Returns(fakeNewOrder);
+        //[Test]
+        //public void CreateOrder_WhenOrderNotExists_ThenSuccess()
+        //{
+        //    var fakeOrder = FakeDataHelper.GetFakeOrder(false);
+        //    var fakeNewOrder = FakeDataHelper.GetFakeOrder(true);
+        //    A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).Returns(fakeOrder);
+        //    A.CallTo(() => _orderRepo.Create(A<Order>.Ignored)).Returns(fakeNewOrder);
 
-            var result = _service.CreateOrder("anyuser", new OrderModel());
+        //    var result = _service.CreateOrder("anyuser", new OrderModel());
 
-            A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => _orderRepo.Create(A<Order>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => _userRepository.FindAll(A<string[]>.Ignored)).MustHaveHappenedOnceExactly();
+        //    A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+        //    A.CallTo(() => _orderRepo.Create(A<Order>.Ignored)).MustHaveHappenedOnceExactly();
+        //    A.CallTo(() => _userRepository.FindAll(A<string[]>.Ignored)).MustHaveHappenedOnceExactly();
 
-            Assert.NotNull(result);
-        }
+        //    Assert.NotNull(result);
+        //}
 
         [Test]
         public void GetOrder_WhenOrderExists_ThenSuccess()
