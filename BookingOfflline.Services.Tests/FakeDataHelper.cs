@@ -46,7 +46,8 @@ namespace BookingOffline.Services.Tests
         {
             if (success)
             {
-                return new Order() { State = 1, OrderItems = new List<OrderItem>() };
+                return new Order() { State = 1, Options = @"[{id: 1, name: '加饭', type:'bool', default: false, order: 1},
+      {id: 2, name: '加辣', type:'bool', default: false, order: 2}]", OrderItems = new List<OrderItem>() };
             }
 
             return null;

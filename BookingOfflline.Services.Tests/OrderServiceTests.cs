@@ -30,33 +30,18 @@ namespace BookingOffline.Services.Tests
         }
 
         [Test]
-        public void CreateOrder_WhenOrderExists_ThenFailed()
+        public void CreateOrder_ShouldSucceed()
         {
             var fakeOrder = FakeDataHelper.GetFakeOrder(true);
-            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).Returns(fakeOrder);
+            A.CallTo(() => _orderRepo.Create(A<Order>.Ignored)).Returns(fakeOrder);
+            A.CallTo(() => _userRepository.FindAll(A<string[]>.Ignored)).Returns(new List<AlipayUser>().AsQueryable());
 
-            Assert.Throws<Exception>(() => _service.CreateOrder("anyuser", new OrderModel()));
+            var result = _service.CreateOrder("anyuser", new OrderModel() { });
 
-            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => _orderRepo.Create(A<Order>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => _orderRepo.Create(A<Order>.Ignored)).MustHaveHappened();
+            A.CallTo(() => _userRepository.FindAll(A<string>.Ignored)).MustHaveHappened();
+            Assert.IsTrue(result != null);
         }
-
-        //[Test]
-        //public void CreateOrder_WhenOrderNotExists_ThenSuccess()
-        //{
-        //    var fakeOrder = FakeDataHelper.GetFakeOrder(false);
-        //    var fakeNewOrder = FakeDataHelper.GetFakeOrder(true);
-        //    A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).Returns(fakeOrder);
-        //    A.CallTo(() => _orderRepo.Create(A<Order>.Ignored)).Returns(fakeNewOrder);
-
-        //    var result = _service.CreateOrder("anyuser", new OrderModel());
-
-        //    A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).MustHaveHappenedOnceExactly();
-        //    A.CallTo(() => _orderRepo.Create(A<Order>.Ignored)).MustHaveHappenedOnceExactly();
-        //    A.CallTo(() => _userRepository.FindAll(A<string[]>.Ignored)).MustHaveHappenedOnceExactly();
-
-        //    Assert.NotNull(result);
-        //}
 
         [Test]
         public void GetOrder_WhenOrderExists_ThenSuccess()

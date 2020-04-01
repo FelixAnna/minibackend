@@ -83,7 +83,7 @@ namespace BookingOffline.Services
                 TotalCount = orders.Count(),
                 Orders = (from od in returnedOrders
                           let us = users.FirstOrDefault(u => u.Id == od.CreatedBy)
-                          select OrderCollectionItem.ToOrderCollectionItem(od, us)).OrderByDescending(x=>x.CreatedAt).ToList()
+                          select OrderCollectionItem.ToOrderCollectionItem(od, us)).OrderByDescending(x => x.CreatedAt).ToList()
             };
 
             return results;
