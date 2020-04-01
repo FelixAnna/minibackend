@@ -15,9 +15,7 @@ namespace BookingOffline.Services.Models
 
     public class OrderCollectionItem
     {
-        public string OrderId { get; set; }
-
-        public int? ShopId { get; set; }
+        public int OrderId { get; set; }
 
         public int State { get; set; }
         public int TotalItems { get; set; }
@@ -33,7 +31,6 @@ namespace BookingOffline.Services.Models
             return new OrderCollectionItem()
             {
                 OrderId = order.OrderId,
-                ShopId = order.ShopId,
                 State = order.State,
                 TotalItems = order.OrderItems?.Count ?? 0,
                 TotalCost = order.OrderItems?.Sum(x=>x.Price) ?? 0,

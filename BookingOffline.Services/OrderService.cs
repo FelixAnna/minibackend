@@ -3,6 +3,7 @@ using BookingOffline.Repositories.Interfaces;
 using BookingOffline.Services.Interfaces;
 using BookingOffline.Services.Models;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,29 +25,18 @@ namespace BookingOffline.Services
 
         public OrderResultModel CreateOrder(string userId, OrderModel order)
         {
-            if (_orderRepo.FindById(order.OrderId) != null)
-            {
-                throw new Exception($"Order already exists: {order.OrderId}");
-            }
-
-            if (string.IsNullOrEmpty(order.OrderId))
-            {
-                throw new Exception($"OrderId cannot be null");
-            }
-
             var newOrder = _orderRepo.Create(new Order()
             {
                 CreatedAt = DateTime.UtcNow,
                 CreatedBy = userId,
-                OrderId = order.OrderId,
-                ShopId = order.ShopId
+                Options = JsonConvert.SerializeObject(order.Options)
             });
 
             var users = _userRepository.FindAll(new[] { userId }).ToList();
             return OrderResultModel.FromOrder(newOrder, users);
         }
 
-        public OrderResultModel GetOrder(string orderId)
+        public OrderResultModel GetOrder(int orderId)
         {
             var order = _orderRepo.FindById(orderId);
             if (order == null)
@@ -99,7 +89,7 @@ namespace BookingOffline.Services
             return results;
         }
 
-        public bool RemoveOrder(string orderId, string userId)
+        public bool RemoveOrder(int orderId, string userId)
         {
             if (_orderRepo.Delete(orderId, userId))
             {
@@ -112,7 +102,7 @@ namespace BookingOffline.Services
             }
         }
 
-        public async Task<bool> LockOrderAsync(string orderId, string userId)
+        public async Task<bool> LockOrderAsync(int orderId, string userId)
         {
             var order = _orderRepo.FindById(orderId);
             if (order == null)
@@ -125,7 +115,7 @@ namespace BookingOffline.Services
             return true;
         }
 
-        public async Task<bool> UnlockOrderAsync(string orderId, string userId)
+        public async Task<bool> UnlockOrderAsync(int orderId, string userId)
         {
             var order = _orderRepo.FindById(orderId);
             if (order == null)

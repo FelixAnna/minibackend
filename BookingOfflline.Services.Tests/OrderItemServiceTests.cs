@@ -35,7 +35,7 @@ namespace BookingOffline.Services.Tests
         {
             var fakeOrder = FakeDataHelper.GetFakeOrder(true);
             var fakeOrderItem = FakeDataHelper.GetFakeOrderItem(true);
-            A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).Returns(fakeOrder);
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).Returns(fakeOrder);
             A.CallTo(() => _orderItemRepo.Create(A<OrderItem>.Ignored)).Returns(fakeOrderItem);
 
             var result = _service.CreateOrderItem("anyId", new OrderItemModel()
@@ -43,7 +43,7 @@ namespace BookingOffline.Services.Tests
                 Options = new List<OrderItemOptionModel>().ToArray()
             });
 
-            A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _orderItemRepo.Create(A<OrderItem>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.IsTrue(result != null);
         }
@@ -51,22 +51,22 @@ namespace BookingOffline.Services.Tests
         [Test]
         public void CreateOrderItem_WhenOrderNotExists_ThenFailed()
         {
-            A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).Returns(null);
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).Returns(null);
 
             Assert.Throws<Exception>(() => _service.CreateOrderItem("anyId", new OrderItemModel()));
 
-            A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _orderItemRepo.Create(A<OrderItem>.Ignored)).MustNotHaveHappened();
         }
 
         [Test]
         public void RemoveOrderItem_WhenOrderNotExists_ThenFailed()
         {
-            A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).Returns(null);
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).Returns(null);
 
             Assert.Throws<Exception>(() => _service.RemoveOrderItem(123, "anyUserId"));
 
-            A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _orderItemRepo.Delete(A<int>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
         }
 
@@ -75,11 +75,11 @@ namespace BookingOffline.Services.Tests
         {
             var fakeOrder = FakeDataHelper.GetFakeOrder(true);
             fakeOrder.State = 2;
-            A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).Returns(fakeOrder);
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).Returns(fakeOrder);
 
             Assert.Throws<Exception>(() => _service.RemoveOrderItem(123, "anyUserId"));
 
-            A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _orderItemRepo.Delete(A<int>.Ignored, A<string>.Ignored)).MustNotHaveHappened();
         }
 
@@ -87,12 +87,12 @@ namespace BookingOffline.Services.Tests
         public void RemoveOrderItem_WhenNoPermission_ThenFailed()
         {
             var fakeOrder = FakeDataHelper.GetFakeOrder(true);
-            A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).Returns(fakeOrder);
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).Returns(fakeOrder);
             A.CallTo(() => _orderItemRepo.Delete(A<int>.Ignored, A<string>.Ignored)).Returns(false);
 
             Assert.Throws<Exception>(() => _service.RemoveOrderItem(123, "anyUserId"));
 
-            A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _orderItemRepo.Delete(A<int>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
         }
 
@@ -100,12 +100,12 @@ namespace BookingOffline.Services.Tests
         public void RemoveOrderItem_WhenHavePermission_ThenSuccess()
         {
             var fakeOrder = FakeDataHelper.GetFakeOrder(true);
-            A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).Returns(fakeOrder);
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).Returns(fakeOrder);
             A.CallTo(() => _orderItemRepo.Delete(A<int>.Ignored, A<string>.Ignored)).Returns(true);
 
             var result = _service.RemoveOrderItem(123, "anyUserId");
 
-            A.CallTo(() => _orderRepo.FindById(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _orderItemRepo.Delete(A<int>.Ignored, A<string>.Ignored)).MustHaveHappenedOnceExactly();
             Assert.IsTrue(result);
         }

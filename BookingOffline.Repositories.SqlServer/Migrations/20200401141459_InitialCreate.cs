@@ -27,9 +27,10 @@ namespace BookingOffline.Repositories.SqlServer.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    OrderId = table.Column<string>(nullable: false),
-                    ShopId = table.Column<int>(nullable: true),
+                    OrderId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     State = table.Column<int>(nullable: false),
+                    Options = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true)
                 },
@@ -50,7 +51,7 @@ namespace BookingOffline.Repositories.SqlServer.Migrations
                     Remark = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
-                    OrderId = table.Column<string>(nullable: false)
+                    OrderId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

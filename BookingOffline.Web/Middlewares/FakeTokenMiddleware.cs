@@ -18,7 +18,7 @@ namespace BookingOffline.Web.Middlewares
 
         public async Task Invoke(HttpContext httpContext)
         {
-            var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJ5dWZlbGl4IiwiYmY6YWxpYmFiYVVzZXJJZCI6IjEyMzRhIiwiYmY6YWxpcGF5VXNlcklkIjoiMTIzNDU2YWJjIiwibmJmIjoxNTc0Nzc2NTQ2LCJleHAiOjE1NzUzODEzNDYsImlhdCI6MTU3NDc3NjU0Nn0._OqAiVWbe-ScalT6_-Okz066Q6BWsdPL7MezA4Acxe4";
+            var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJlNWIxYmRmMi1hNzk5LTQ4M2YtODcxNy1jYzQzODkyOTU0MDQiLCJiZjphbGliYWJhVXNlcklkIjoiMjA4ODAwMjYzODM4MDg0MCIsImJmOmFsaXBheVVzZXJJZCI6IjIwODgxMDY5NTIxNzYxNTI5NzMwNTE0ODAyMDE4NDg0IiwibmJmIjoxNTg1NzUxNDUwLCJleHAiOjE1ODYzNTYyNTAsImlhdCI6MTU4NTc1MTQ1MH0.-uUq2qBJtgiAPrAJpupNTBSsv6K0CwD4kTU7rEfcCXQ";
             httpContext.Request.Headers.Add("Authorization", "Bearer " + token);
             await _next(httpContext);
 

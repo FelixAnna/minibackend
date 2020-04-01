@@ -6,7 +6,7 @@ namespace BookingOffline.Services.Models
 {
     public class OrderItemModel
     {
-        public string OrderId { get; set; }
+        public int OrderId { get; set; }
         
         public int? ProductId { get; set; }
 

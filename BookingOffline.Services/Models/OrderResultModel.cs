@@ -1,4 +1,5 @@
 ﻿using BookingOffline.Entities;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,9 @@ namespace BookingOffline.Services.Models
 {
     public class OrderResultModel
     {
-        public string OrderId { get; set; }
+        public int OrderId { get; set; }
 
-        public int? ShopId { get; set; }
+        public IList<OrderOptionModel> Options { get; set; }
 
         public int State { get; set; }
         public List<OrderItemResultModel> ProductList { get; set; }
@@ -24,7 +25,7 @@ namespace BookingOffline.Services.Models
             var result = new OrderResultModel()
             {
                 OrderId = order.OrderId,
-                ShopId = order.ShopId,
+                Options= JsonConvert.DeserializeObject<IList<OrderOptionModel>>(order.Options),
                 State = order.State,
                 ProductList = order.OrderItems?.Select(x => OrderItemResultModel.FromOrderItem(x, users)).OrderByDescending(x=>x.CreatedAt).ToList() ?? new List<OrderItemResultModel>(),
                 CreatedAt = order.CreatedAt.ToUniversalTime(),

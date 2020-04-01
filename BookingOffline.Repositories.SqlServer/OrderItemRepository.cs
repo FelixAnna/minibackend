@@ -43,7 +43,7 @@ namespace BookingOffline.Repositories.SqlServer
             return true;
         }
 
-        public IQueryable<OrderItem> FindAll(string orderId)
+        public IQueryable<OrderItem> FindAll(int orderId)
         {
             return _context.OrderItems
                 .Include(o => o.OrderItemOptions)

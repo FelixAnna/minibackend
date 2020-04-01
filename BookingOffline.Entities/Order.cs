@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace BookingOffline.Entities
 {
@@ -10,11 +11,11 @@ namespace BookingOffline.Entities
             State = (int)OrderStatus.New;
         }
 
-        public string OrderId { get; set; }
-
-        public int? ShopId { get; set; }
+        [Key]
+        public int OrderId { get; set; }
 
         public int State { get; set; }
+        public string Options { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public string CreatedBy { get; set; }

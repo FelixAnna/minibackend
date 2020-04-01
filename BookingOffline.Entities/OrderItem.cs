@@ -19,7 +19,7 @@ namespace BookingOffline.Entities
         public DateTime CreatedAt { get; set; }
         public string CreatedBy { get; set; }
 
-        public string OrderId { get; set; }
+        public int OrderId { get; set; }
         public virtual Order Order { get; set; }
     }
 }

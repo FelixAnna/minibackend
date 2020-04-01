@@ -14,7 +14,7 @@ namespace BookingOffline.Repositories.SqlServer
             _context = context;
         }
 
-        public Order FindById(string key)
+        public Order FindById(int key)
         {
             return _context.Orders
                 .Include(o => o.OrderItems)
@@ -29,12 +29,12 @@ namespace BookingOffline.Repositories.SqlServer
             return newItem.Entity;
         }
 
-        public bool Delete(string key, string userId)
+        public bool Delete(int key, string userId)
         {
             var order = _context.Orders
                     .Include(o => o.OrderItems)
                     .ThenInclude(a => a.OrderItemOptions)
-                    .FirstOrDefault(x => (x.OrderId == key || string.IsNullOrEmpty(key)) && x.CreatedBy == userId);
+                    .FirstOrDefault(x => x.OrderId == key && x.CreatedBy == userId);
             if (order == null)
             {
                 return false;

@@ -37,7 +37,7 @@ namespace BookingOffline.Web.Controllers
         /// <param name="orderId"></param>
         /// <returns></returns>
         [HttpPost("remove")]
-        public ActionResult RemoveOrder([FromQuery]string orderId)
+        public ActionResult RemoveOrder([FromQuery]int orderId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             _service.RemoveOrder(orderId, userId);
@@ -51,7 +51,7 @@ namespace BookingOffline.Web.Controllers
         /// <param name="orderId"></param>
         /// <returns></returns>
         [HttpPost("{orderId}/lock")]
-        public async Task<ActionResult> LockOrder([FromRoute]string orderId)
+        public async Task<ActionResult> LockOrder([FromRoute]int orderId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             await _service.LockOrderAsync(orderId, userId);
@@ -64,7 +64,7 @@ namespace BookingOffline.Web.Controllers
         /// <param name="orderId"></param>
         /// <returns></returns>
         [HttpPost("{orderId}/unlock")]
-        public async Task<ActionResult> UnlockOrder([FromRoute]string orderId)
+        public async Task<ActionResult> UnlockOrder([FromRoute]int orderId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var orders = await _service.UnlockOrderAsync(orderId, userId);
@@ -77,7 +77,7 @@ namespace BookingOffline.Web.Controllers
         /// <param name="orderId"></param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult GetOrder(string orderId)
+        public ActionResult GetOrder(int orderId)
         {
             var order = _service.GetOrder(orderId);
             if (order != null)

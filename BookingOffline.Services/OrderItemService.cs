@@ -52,7 +52,7 @@ namespace BookingOffline.Services
         public bool RemoveOrderItem(int orderItemId, string userId)
         {
             var item = _orderItemRepo.FindById(orderItemId);
-            if (_orderRepo.FindById(item?.OrderId)?.State == (int)OrderStatus.New
+            if (_orderRepo.FindById(item?.OrderId ?? 0)?.State == (int)OrderStatus.New
                 && _orderItemRepo.Delete(orderItemId, userId))
             {
                 _logger.LogInformation($"User {userId} deleted the order {orderItemId}");

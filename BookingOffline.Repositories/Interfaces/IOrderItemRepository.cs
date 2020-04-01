@@ -5,6 +5,6 @@ namespace BookingOffline.Repositories.Interfaces
 {
     public interface IOrderItemRepository : IRepository<OrderItem, int>
     {
-        IQueryable<OrderItem> FindAll(string orderId);
+        IQueryable<OrderItem> FindAll(int orderId);
     }
 }
