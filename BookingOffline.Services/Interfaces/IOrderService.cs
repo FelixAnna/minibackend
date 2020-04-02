@@ -18,5 +18,6 @@ namespace BookingOffline.Services.Interfaces
         bool RemoveOrder(int orderId, string userId);
         Task<bool> UnlockOrderAsync(int orderId, string userId);
         Task<bool> LockOrderAsync(int orderId, string userId);
+        Task<OrderResultModel> UpdateOrderAsync(int id, string userId, OrderModel model);
     }
 }

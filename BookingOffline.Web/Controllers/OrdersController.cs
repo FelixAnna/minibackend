@@ -32,6 +32,24 @@ namespace BookingOffline.Web.Controllers
         }
 
         /// <summary>
+        /// Create a new order (with no orderItem)
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("{id}/options")]
+        public async Task<ActionResult> UpdateOrder(int Id, [FromBody]OrderModel model)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var order = await _service.UpdateOrderAsync(Id, userId, model);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(order);
+        }
+
+        /// <summary>
         /// Remove a order and it related orderItem
         /// </summary>
         /// <param name="orderId"></param>
@@ -89,7 +107,7 @@ namespace BookingOffline.Web.Controllers
         }
 
         [HttpGet("list")]
-        public ActionResult GetOrders(int page = 1, int size = 10,DateTime? startDate=null, DateTime? endDate=null)
+        public ActionResult GetOrders(int page = 1, int size = 10, DateTime? startDate = null, DateTime? endDate = null)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var orders = _service.GetOrders(userId, startDate, endDate, page, size);

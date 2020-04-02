@@ -32,8 +32,24 @@ namespace BookingOffline.Services
                 Options = JsonConvert.SerializeObject(order.Options)
             });
 
-            var users = _userRepository.FindAll(new[] { userId }).ToList();
-            return OrderResultModel.FromOrder(newOrder, users);
+            var user = _userRepository.FindById(userId);
+            return OrderResultModel.FromOrder(newOrder, user);
+        }
+
+        public async Task<OrderResultModel> UpdateOrderAsync(int id, string userId, OrderModel model)
+        {
+            var order = _orderRepo.FindById(id);
+            if (order == null)
+            {
+                return null;
+            }
+
+            order.Options= JsonConvert.SerializeObject(model.Options);
+            await _orderRepo.UpdateAsync(order);
+
+            var newOrder = _orderRepo.FindById(id);
+            var user = _userRepository.FindById(userId);
+            return OrderResultModel.FromOrder(newOrder, user);
         }
 
         public OrderResultModel GetOrder(int orderId)
@@ -52,7 +68,7 @@ namespace BookingOffline.Services
                 users = _userRepository.FindAll(relatedUserIds.ToArray()).ToList();
             }
 
-            var result = OrderResultModel.FromOrder(order, users);
+            var result = OrderResultModel.FromOrder(order, users.ToArray());
 
             return result;
         }
@@ -110,7 +126,8 @@ namespace BookingOffline.Services
                 return false;
             }
 
-            await _orderRepo.LockOrderAsync(order);
+            order.State = (int)OrderStatus.Locked;
+            await _orderRepo.UpdateAsync(order);
             _logger.LogInformation($"User {userId} locked the order {orderId}");
             return true;
         }
@@ -123,7 +140,8 @@ namespace BookingOffline.Services
                 return false;
             }
 
-            await _orderRepo.UnlockOrderAsync(order);
+            order.State = (int)OrderStatus.New;
+            await _orderRepo.UpdateAsync(order);
             _logger.LogInformation($"User {userId} unlocked the order {orderId}");
             return true;
         }

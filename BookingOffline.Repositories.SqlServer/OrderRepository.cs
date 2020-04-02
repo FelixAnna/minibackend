@@ -59,16 +59,8 @@ namespace BookingOffline.Repositories.SqlServer
                 .Where(x => x.CreatedBy == userId || x.OrderItems.Any(y => y.CreatedBy == userId));
         }
 
-        public async Task LockOrderAsync(Order order)
+        public async Task UpdateAsync(Order order)
         {
-            order.State = (int)OrderStatus.Locked;
-            _context.Entry(order).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UnlockOrderAsync(Order order)
-        {
-            order.State = (int)OrderStatus.New;
             _context.Entry(order).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             await _context.SaveChangesAsync();
         }

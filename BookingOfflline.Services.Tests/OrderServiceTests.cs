@@ -39,8 +39,36 @@ namespace BookingOffline.Services.Tests
             var result = _service.CreateOrder("anyuser", new OrderModel() { });
 
             A.CallTo(() => _orderRepo.Create(A<Order>.Ignored)).MustHaveHappened();
-            A.CallTo(() => _userRepository.FindAll(A<string>.Ignored)).MustHaveHappened();
+            A.CallTo(() => _userRepository.FindById(A<string>.Ignored)).MustHaveHappened();
             Assert.IsTrue(result != null);
+        }
+
+        [Test]
+        public void UpdateOrder_WhenNotExists_ThenShouldFailed()
+        {
+            var fakeOrder = FakeDataHelper.GetFakeOrder(false);
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).Returns(fakeOrder);
+
+            var result = _service.UpdateOrderAsync(123, "anyUserId", new OrderModel() { }).Result;
+
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _orderRepo.UpdateAsync(A<Order>.Ignored)).MustNotHaveHappened();
+
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void UpdateOrder_ShouldSucceed()
+        {
+            var fakeOrder = FakeDataHelper.GetFakeOrder(true);
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).Returns(fakeOrder);
+
+            var result = _service.UpdateOrderAsync(123, "anyUserId", new OrderModel() { }).Result;
+
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappened();
+            A.CallTo(() => _orderRepo.UpdateAsync(A<Order>.Ignored)).MustHaveHappenedOnceExactly();
+
+            Assert.IsNotNull(result);
         }
 
         [Test]
@@ -137,7 +165,7 @@ namespace BookingOffline.Services.Tests
             var result = _service.LockOrderAsync(123, "anyUserId").Result;
 
             A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => _orderRepo.LockOrderAsync(A<Order>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => _orderRepo.UpdateAsync(A<Order>.Ignored)).MustNotHaveHappened();
 
             Assert.IsFalse(result);
         }
@@ -151,7 +179,7 @@ namespace BookingOffline.Services.Tests
             var result = _service.LockOrderAsync(123, "anyUserId").Result;
 
             A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => _orderRepo.LockOrderAsync(A<Order>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _orderRepo.UpdateAsync(A<Order>.Ignored)).MustHaveHappenedOnceExactly();
 
             Assert.IsTrue(result);
         }
@@ -165,7 +193,7 @@ namespace BookingOffline.Services.Tests
             var result = _service.UnlockOrderAsync(123, "anyUserId").Result;
 
             A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => _orderRepo.UnlockOrderAsync(A<Order>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => _orderRepo.UpdateAsync(A<Order>.Ignored)).MustNotHaveHappened();
 
             Assert.IsFalse(result);
         }
@@ -179,7 +207,7 @@ namespace BookingOffline.Services.Tests
             var result = _service.UnlockOrderAsync(123, "anyUserId").Result;
 
             A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => _orderRepo.UnlockOrderAsync(A<Order>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _orderRepo.UpdateAsync(A<Order>.Ignored)).MustHaveHappenedOnceExactly();
 
             Assert.IsTrue(result);
         }

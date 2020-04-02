@@ -20,7 +20,7 @@ namespace BookingOffline.Services.Models
         public string CreatedBy { get; set; }
         public string OwnerName { get; set; }
 
-        public static OrderResultModel FromOrder(Order order, IEnumerable<AlipayUser> users)
+        public static OrderResultModel FromOrder(Order order, params AlipayUser[] users)
         {
             var result = new OrderResultModel()
             {

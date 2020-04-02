@@ -7,7 +7,6 @@ namespace BookingOffline.Repositories.Interfaces
     public interface IOrderRepository : IRepository<Order, int>
     {
         IQueryable<Order> FindAll(string userId);
-        Task LockOrderAsync(Order order);
-        Task UnlockOrderAsync(Order order);
+        Task UpdateAsync(Order order);
     }
 }
