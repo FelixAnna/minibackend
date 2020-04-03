@@ -21,6 +21,6 @@ namespace BookingOffline.Services.Models
     public class OrderItemOptionModel
     {
         public string Name { get; set; }
-        public bool Value { get; set; }
+        public string Value { get; set; }
     }
 }

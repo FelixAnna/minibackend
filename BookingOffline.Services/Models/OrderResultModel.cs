@@ -78,7 +78,7 @@ namespace BookingOffline.Services.Models
     public class OrderItemOptionsResultModel
     {
         public string Name { get; set; }
-        public bool Value { get; set; }
+        public string Value { get; set; }
 
         public static OrderItemOptionsResultModel FromOrderItenOption(OrderItemOption option)
         {

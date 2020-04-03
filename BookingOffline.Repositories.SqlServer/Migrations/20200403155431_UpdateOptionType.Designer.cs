@@ -4,14 +4,16 @@ using BookingOffline.Repositories.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookingOffline.Repositories.SqlServer.Migrations
 {
     [DbContext(typeof(BODBContext))]
-    partial class BODBContextModelSnapshot : ModelSnapshot
+    [Migration("20200403155431_UpdateOptionType")]
+    partial class UpdateOptionType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
