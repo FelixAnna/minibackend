@@ -13,7 +13,6 @@ namespace BookingOffline.Repositories.SqlServer
         public AlipayUserRepository(BODBContext context)
         {
             _context = context;
-            _context.Database.EnsureCreated();
         }
 
         public AlipayUser Create(AlipayUser user)

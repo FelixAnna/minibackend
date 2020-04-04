@@ -35,14 +35,20 @@ namespace BookingOffline.Web
             services.AddBSSevices();
             services.AddDASevices();
             services.AddCommonSevices(Configuration);
+
+            if (Configuration["Migration"] == "on")
+            {
+                services.BuildServiceProvider().GetService<BODBContext>().Database.Migrate();
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseMiddleware<GlobalExceptionHandler>();
-
-            //app.UseMiddleware<FakeTokenMiddleware>();
+#if DEBUG
+            app.UseMiddleware<FakeTokenMiddleware>();
+#endif
             app.UseSwaggerUI();
 
             //app.UseHttpsRedirection();
