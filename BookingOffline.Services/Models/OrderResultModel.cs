@@ -60,7 +60,6 @@ namespace BookingOffline.Services.Models
             var result = new OrderItemResultModel()
             {
                 OrderItemId = iten.OrderItemId,
-                ProductId = iten.ProductId,
                 Name = iten.Name,
                 Price = iten.Price,
                 Remark = iten.Remark,

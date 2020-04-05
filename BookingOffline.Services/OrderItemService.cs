@@ -29,7 +29,6 @@ namespace BookingOffline.Services
                 {
                     Name = item.Name,
                     Price = item.Price,
-                    ProductId = item.ProductId,
                     Remark = item.Remark,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = userId,
