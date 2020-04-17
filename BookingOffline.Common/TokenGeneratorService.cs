@@ -35,5 +35,25 @@ namespace BookingOffline.Common
 
             return tokenHandler.WriteToken(token);
         }
+
+        public string CreateJwtToken(WechatUser wechatUser)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["JwtToken:SecretKey"]);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, wechatUser.Id),
+                    new Claim("bf:openId", wechatUser.OpenId),
+                    new Claim("bf:unionId", wechatUser.UnionId)
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return tokenHandler.WriteToken(token);
+        }
     }
 }

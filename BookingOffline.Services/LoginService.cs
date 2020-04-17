@@ -5,6 +5,7 @@ using BookingOffline.Services.Interfaces;
 using BookingOffline.Services.Models;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Threading.Tasks;
 
 namespace BookingOffline.Services
 {
@@ -12,8 +13,12 @@ namespace BookingOffline.Services
     {
         private readonly ILogger<LoginService> _logger;
         private readonly ITokenGeneratorService _tokenService;
+
         private readonly IAlipayService _alipayService;
         private readonly IAlipayUserRepository _userRepo;
+
+        private readonly IWechatService _wechatService;
+        private readonly IWechatUserRepository _wechatUserRepo;
 
         public LoginService(ITokenGeneratorService tokenService, IAlipayService alipayService, IAlipayUserRepository userRepo, ILogger<LoginService> logger)
         {
@@ -55,6 +60,47 @@ namespace BookingOffline.Services
                 UserId = alipayUser.Id,
                 NickName = alipayUser.AlipayName,
                 Photo = alipayUser.AlipayPhoto
+            };
+
+            return result;
+        }
+
+        public async Task<LoginResultModel> LoginMiniWechatAsync(string code)
+        {
+            var response = await _wechatService.GetUserIdByCode(code);
+            //retry
+            int retryCount = 0;
+            while(response.ErrorCode <0 && retryCount++<3)
+            {
+                response = await _wechatService.GetUserIdByCode(code);
+            }
+
+            if (response.IsError)
+            {
+                _logger.LogError(response.ErrorMsg);
+                return null;
+            }
+
+            var wechatUser = _wechatUserRepo.FindByOpenId(response.OpenId);
+            if (wechatUser == null)
+            {
+                wechatUser = _wechatUserRepo.Create(new WechatUser()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    OpenId = response.OpenId,
+                    UnionId = response.UnionId,
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
+
+            var tokenStr = _tokenService.CreateJwtToken(wechatUser);
+            var result = new LoginResultModel()
+            {
+                BOToken = tokenStr,
+                AccessToken = response.SessionKey,
+                UserId = wechatUser.Id,
+                NickName = wechatUser.NickName,
+                Photo = wechatUser.AvatarUrl
             };
 
             return result;
