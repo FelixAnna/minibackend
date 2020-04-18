@@ -1,10 +1,9 @@
 using BookingOffline.Common;
+using BookingOffline.Entities;
 using BookingOffline.Repositories.Interfaces;
-using BookingOffline.Services;
+using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
-using FakeItEasy;
-using BookingOffline.Entities;
 
 namespace BookingOffline.Services.Tests
 {
@@ -14,6 +13,8 @@ namespace BookingOffline.Services.Tests
         private ITokenGeneratorService _tokenService;
         private IAlipayService _alipayService;
         private IAlipayUserRepository _userRepo;
+        private IWechatService _wechatService;
+        private IWechatUserRepository _wechatUserRepo;
 
         private LoginService _service;
 
@@ -24,15 +25,17 @@ namespace BookingOffline.Services.Tests
             _tokenService = A.Fake<ITokenGeneratorService>();
             _alipayService = A.Fake<IAlipayService>();
             _userRepo = A.Fake<IAlipayUserRepository>();
+            _wechatService = A.Fake<IWechatService>();
+            _wechatUserRepo = A.Fake<IWechatUserRepository>();
 
-            _service = new LoginService(_tokenService, _alipayService, _userRepo, _logger);
+            _service = new LoginService(_tokenService, _alipayService, _userRepo, _wechatService, _wechatUserRepo, _logger);
         }
 
         [Test]
         public void LoginMiniAlipay_WhenAlipayFailed_ThenReturnNull()
         {
-            var fakeAlipayResponse = FakeDataHelper.GetFakeAlipayResponse(success: false);
-            A.CallTo(() => _alipayService.GetUserIdByCode(A<string>.Ignored)).Returns(fakeAlipayResponse);
+            var fakeResponse = FakeDataHelper.GetFakeAlipayResponse(success: false);
+            A.CallTo(() => _alipayService.GetUserIdByCode(A<string>.Ignored)).Returns(fakeResponse);
 
             var result = _service.LoginMiniAlipay("anycode");
 
@@ -45,9 +48,9 @@ namespace BookingOffline.Services.Tests
         public void LoginMiniAlipay_WhenUserNotExists_ThenShouldCreateUser()
         {
             string fakeToken = "fakeToken";
-            var fakeAlipayResponse = FakeDataHelper.GetFakeAlipayResponse(success: true);
+            var fakeResponse = FakeDataHelper.GetFakeAlipayResponse(success: true);
             var fakeUserResult = FakeDataHelper.GetFakeAlipayUserById(success: false);
-            A.CallTo(() => _alipayService.GetUserIdByCode(A<string>.Ignored)).Returns(fakeAlipayResponse);
+            A.CallTo(() => _alipayService.GetUserIdByCode(A<string>.Ignored)).Returns(fakeResponse);
             A.CallTo(() => _userRepo.FindByAlipayId(A<string>.Ignored)).Returns(fakeUserResult);
             A.CallTo(() => _userRepo.Create(A<AlipayUser>.Ignored)).Returns(new AlipayUser());
             A.CallTo(() => _tokenService.CreateJwtToken(A<AlipayUser>.Ignored)).Returns(fakeToken);
@@ -66,9 +69,9 @@ namespace BookingOffline.Services.Tests
         public void LoginMiniAlipay_WhenUserExists_ThenShouldNotCreateUser()
         {
             string fakeToken = "fakeToken";
-            var fakeAlipayResponse = FakeDataHelper.GetFakeAlipayResponse(success:true);
-            var fakeUserResult = FakeDataHelper.GetFakeAlipayUserById(success:true);
-            A.CallTo(() => _alipayService.GetUserIdByCode(A<string>.Ignored)).Returns(fakeAlipayResponse);
+            var fakeResponse = FakeDataHelper.GetFakeAlipayResponse(success: true);
+            var fakeUserResult = FakeDataHelper.GetFakeAlipayUserById(success: true);
+            A.CallTo(() => _alipayService.GetUserIdByCode(A<string>.Ignored)).Returns(fakeResponse);
             A.CallTo(() => _userRepo.FindByAlipayId(A<string>.Ignored)).Returns(fakeUserResult);
             A.CallTo(() => _userRepo.Create(A<AlipayUser>.Ignored)).Returns(fakeUserResult);
             A.CallTo(() => _tokenService.CreateJwtToken(A<AlipayUser>.Ignored)).Returns(fakeToken);
@@ -81,6 +84,61 @@ namespace BookingOffline.Services.Tests
             A.CallTo(() => _userRepo.FindByAlipayId(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _userRepo.Create(A<AlipayUser>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => _tokenService.CreateJwtToken(A<AlipayUser>.Ignored)).MustHaveHappenedOnceExactly();
+        }
+
+        [Test]
+        public void LoginMiniWechatAsync_WhenWechatFailed_ThenReturnNull()
+        {
+            var fakeWechatLoginResponse = FakeDataHelper.GetFakeWechatLoginResultModel(success: false);
+            A.CallTo(() => _wechatService.GetUserIdByCode(A<string>.Ignored)).Returns(fakeWechatLoginResponse);
+
+            var result = _service.LoginMiniWechatAsync("anycode").Result;
+
+            Assert.IsNull(result);
+            A.CallTo(() => _wechatService.GetUserIdByCode(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _wechatUserRepo.FindByOpenId(A<string>.Ignored)).MustNotHaveHappened();
+        }
+
+        [Test]
+        public void LoginMiniWechatAsync_WhenUserNotExists_ThenShouldCreateUser()
+        {
+            string fakeToken = "fakeToken";
+            var fakeResponse = FakeDataHelper.GetFakeWechatLoginResultModel(success: true);
+            var fakeUserResult = FakeDataHelper.GetFakeWechatUserById(success: false);
+            A.CallTo(() => _wechatService.GetUserIdByCode(A<string>.Ignored)).Returns(fakeResponse);
+            A.CallTo(() => _wechatUserRepo.FindByOpenId(A<string>.Ignored)).Returns(fakeUserResult);
+            A.CallTo(() => _wechatUserRepo.Create(A<WechatUser>.Ignored)).Returns(new WechatUser());
+            A.CallTo(() => _tokenService.CreateJwtToken(A<WechatUser>.Ignored)).Returns(fakeToken);
+
+            var result = _service.LoginMiniWechatAsync("anycode").Result;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.BOToken, fakeToken);
+            A.CallTo(() => _wechatService.GetUserIdByCode(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _wechatUserRepo.FindByOpenId(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _wechatUserRepo.Create(A<WechatUser>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _tokenService.CreateJwtToken(A<WechatUser>.Ignored)).MustHaveHappenedOnceExactly();
+        }
+
+        [Test]
+        public void LoginMiniWechatAsync_WhenUserExists_ThenShouldNotCreateUser()
+        {
+            string fakeToken = "fakeToken";
+            var fakeResponse = FakeDataHelper.GetFakeWechatLoginResultModel(success: true);
+            var fakeUserResult = FakeDataHelper.GetFakeWechatUserById(success: true);
+            A.CallTo(() => _wechatService.GetUserIdByCode(A<string>.Ignored)).Returns(fakeResponse);
+            A.CallTo(() => _wechatUserRepo.FindByOpenId(A<string>.Ignored)).Returns(fakeUserResult);
+            A.CallTo(() => _wechatUserRepo.Create(A<WechatUser>.Ignored)).Returns(fakeUserResult);
+            A.CallTo(() => _tokenService.CreateJwtToken(A<WechatUser>.Ignored)).Returns(fakeToken);
+
+            var result = _service.LoginMiniWechatAsync("anycode").Result;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.BOToken, fakeToken);
+            A.CallTo(() => _wechatService.GetUserIdByCode(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _wechatUserRepo.FindByOpenId(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _wechatUserRepo.Create(A<WechatUser>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => _tokenService.CreateJwtToken(A<WechatUser>.Ignored)).MustHaveHappenedOnceExactly();
         }
     }
 }

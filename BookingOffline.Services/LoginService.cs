@@ -20,11 +20,18 @@ namespace BookingOffline.Services
         private readonly IWechatService _wechatService;
         private readonly IWechatUserRepository _wechatUserRepo;
 
-        public LoginService(ITokenGeneratorService tokenService, IAlipayService alipayService, IAlipayUserRepository userRepo, ILogger<LoginService> logger)
+        public LoginService(ITokenGeneratorService tokenService, 
+            IAlipayService alipayService, 
+            IAlipayUserRepository userRepo,
+            IWechatService wechatService,
+            IWechatUserRepository wechatUserRepo,
+            ILogger<LoginService> logger)
         {
             _logger = logger;
             this._tokenService = tokenService;
             this._alipayService = alipayService;
+            this._wechatService = wechatService; ;
+            this._wechatUserRepo = wechatUserRepo;
             _userRepo = userRepo;
         }
 

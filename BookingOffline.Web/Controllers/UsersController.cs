@@ -39,10 +39,38 @@ namespace BookingOffline.Web.Controllers
 
         [Authorize]
         [HttpGet("alipay/info")]
-        public IActionResult GetUserInfo()
+        public IActionResult GetAlipayUserInfo()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user = _userService.GetUserInfo(userId);
+            var user = _userService.GetAlipayUserInfo(userId);
+
+            return Ok(user);
+        }
+
+        [Authorize]
+        [HttpPost("wechat")]
+        public async Task<IActionResult> UpdateWechatUserAsync([FromQuery]string name, [FromQuery]string photo)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(name))
+            {
+                return BadRequest();
+            }
+
+            if (await _userService.UpdateAlipayUserAsync(userId, name, photo))
+            {
+                return Ok();
+            }
+
+            return NotFound();
+        }
+
+        [Authorize]
+        [HttpGet("wechat/info")]
+        public IActionResult GetWechatUserInfo()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _userService.GetWechatUserInfo(userId);
 
             return Ok(user);
         }
