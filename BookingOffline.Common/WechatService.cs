@@ -22,8 +22,9 @@ namespace BookingOffline.Common
         {
             var client = new HttpClient();
             var url = $"https://api.weixin.qq.com/sns/jscode2session?appid={this.appId}&secret={this.secret}&js_code={authCode}&grant_type=authorization_code";
-            var streamTask = client.GetStreamAsync(url);
-            var response = await JsonSerializer.DeserializeAsync<WechatLoginResultModel>(await streamTask);
+            var content = await client.GetStringAsync(url);
+            var response = Newtonsoft.Json.JsonConvert.DeserializeObject<WechatLoginResultModel>(content);
+
             return response;
         }
     }
