@@ -10,10 +10,15 @@ namespace BookingOffline.Common
 {
     public class TokenGeneratorService : ITokenGeneratorService
     {
+        private readonly int _expiresIn = 72;
         private readonly IConfiguration _configuration;
         public TokenGeneratorService(IConfiguration configuration)
         {
             this._configuration = configuration;
+            if (int.TryParse("ExpiresIn", out int result))
+            {
+                _expiresIn = result;
+            }
         }
 
         public string CreateJwtToken(AlipayUser alipayUser)
@@ -28,7 +33,7 @@ namespace BookingOffline.Common
                     new Claim("bf:alibabaUserId", alipayUser.AlibabaUserId),
                     new Claim("bf:alipayUserId", alipayUser.AlipayUserId)
                 }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddHours(_expiresIn),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -47,7 +52,7 @@ namespace BookingOffline.Common
                     new Claim(ClaimTypes.NameIdentifier, wechatUser.Id),
                     new Claim("bf:openId", wechatUser.OpenId)
                 }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddHours(_expiresIn),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
