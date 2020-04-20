@@ -45,8 +45,7 @@ namespace BookingOffline.Common
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, wechatUser.Id),
-                    new Claim("bf:openId", wechatUser.OpenId),
-                    new Claim("bf:unionId", wechatUser.UnionId)
+                    new Claim("bf:openId", wechatUser.OpenId)
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
