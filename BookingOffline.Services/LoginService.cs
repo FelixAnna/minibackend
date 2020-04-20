@@ -60,13 +60,13 @@ namespace BookingOffline.Services
             var result = new LoginResultModel()
             {
                 BOToken = tokenStr,
-                AccessToken = response.AccessToken,
-                ExpiresIn = response.ExpiresIn,
-                ReExpiresIn = response.ReExpiresIn,
-                RefreshToken = response.RefreshToken,
+                //AccessToken = response.AccessToken,
+                //ExpiresIn = response.ExpiresIn,
+                //ReExpiresIn = response.ReExpiresIn,
+                //RefreshToken = response.RefreshToken,
                 UserId = alipayUser.Id,
                 NickName = alipayUser.AlipayName,
-                Photo = alipayUser.AlipayPhoto
+                AvatarUrl = alipayUser.AlipayPhoto
             };
 
             return result;
@@ -104,10 +104,10 @@ namespace BookingOffline.Services
             var result = new LoginResultModel()
             {
                 BOToken = tokenStr,
-                AccessToken = response.SessionKey,
+                //AccessToken = response.SessionKey,
                 UserId = wechatUser.Id,
                 NickName = wechatUser.NickName,
-                Photo = wechatUser.AvatarUrl
+                AvatarUrl = wechatUser.AvatarUrl
             };
 
             return result;
