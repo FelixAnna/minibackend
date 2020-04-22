@@ -8,7 +8,7 @@ namespace BookingOffline.Services
         Task<bool> UpdateAlipayUserAsync(string userId, string nickName, string photo);
         UserResultModel GetAlipayUserInfo(string userId);
 
-        Task<bool> UpdateWechatUserAsync(string userId, string nickName, string photo);
+        Task<bool> UpdateWechatUserAsync(string userId, UserModel model);
         UserResultModel GetWechatUserInfo(string userId);
     }
 }

@@ -63,7 +63,7 @@ namespace BookingOffline.Services
             };
         }
 
-        public async Task<bool> UpdateWechatUserAsync(string userId, string nickName, string photo)
+        public async Task<bool> UpdateWechatUserAsync(string userId, UserModel model)
         {
             var user = _wechatUserRepo.FindById(userId);
             if (user == null)
@@ -72,8 +72,13 @@ namespace BookingOffline.Services
                 return false;
             }
 
-            user.NickName = nickName;
-            user.AvatarUrl = photo;
+            user.NickName = model.NickName;
+            user.AvatarUrl = model.AvatarUrl;
+            user.Country = model.Country;
+            user.Province = model.Province;
+            user.City = model.City;
+            user.Gender = model.Gender;
+            user.Language = model.Language;
             await _wechatUserRepo.UpdateAsync(user);
             return true;
         }
