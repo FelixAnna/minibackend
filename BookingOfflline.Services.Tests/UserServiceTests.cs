@@ -107,7 +107,7 @@ namespace BookingOffline.Services.Tests
             var fakeUser = FakeDataHelper.GetFakeWechatUserById(false);
             A.CallTo(() => _wechatUserRepo.FindById(A<string>.Ignored)).Returns(fakeUser);
 
-            var result = _service.UpdateWechatUserAsync("anyId", "anyName", "anyPhoto").Result;
+            var result = _service.UpdateWechatUserAsync("anyId", new Models.UserModel()).Result;
 
             A.CallTo(() => _wechatUserRepo.FindById(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _wechatUserRepo.UpdateAsync(A<WechatUser>.Ignored)).MustNotHaveHappened();
@@ -121,7 +121,7 @@ namespace BookingOffline.Services.Tests
             var fakeUser = FakeDataHelper.GetFakeWechatUserById(true);
             A.CallTo(() => _wechatUserRepo.FindById(A<string>.Ignored)).Returns(fakeUser);
 
-            var result = _service.UpdateWechatUserAsync("anyId", "anyName", "anyPhoto").Result;
+            var result = _service.UpdateWechatUserAsync("anyId", new Models.UserModel()).Result;
 
             A.CallTo(() => _wechatUserRepo.FindById(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _wechatUserRepo.UpdateAsync(A<WechatUser>.Ignored)).MustHaveHappenedOnceExactly();

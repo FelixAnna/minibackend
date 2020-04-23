@@ -1,10 +1,7 @@
 ﻿using BookingOffline.Services;
-using BookingOffline.Services.Interfaces;
+using BookingOffline.Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -49,15 +46,15 @@ namespace BookingOffline.Web.Controllers
 
         [Authorize]
         [HttpPost("wechat")]
-        public async Task<IActionResult> UpdateWechatUserAsync([FromQuery]string name, [FromQuery]string photo)
+        public async Task<IActionResult> UpdateWechatUserAsync([FromBody]UserModel model)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(model?.NickName))
             {
                 return BadRequest();
             }
 
-            if (await _userService.UpdateAlipayUserAsync(userId, name, photo))
+            if (await _userService.UpdateWechatUserAsync(userId, model))
             {
                 return Ok();
             }
