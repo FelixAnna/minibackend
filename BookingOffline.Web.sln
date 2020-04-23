@@ -19,6 +19,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingOffline.Repositories
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingOffline.Repositories.Sqlite", "BookingOffline.Repositories.Sqlite\BookingOffline.Repositories.Sqlite.csproj", "{1DACAFDF-9BEF-4F7D-A16B-E4DA7643EFC1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "aws", "aws", "{FCCD991B-5C33-414B-9B2A-06C62D5326DF}"
+	ProjectSection(SolutionItems) = preProject
+		aws\dockerrun.aws.json = aws\dockerrun.aws.json
+		aws\setup codedeploy = aws\setup codedeploy
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ec2", "ec2", "{E3709931-74CB-41CF-B4DA-938375B8674D}"
+	ProjectSection(SolutionItems) = preProject
+		aws\ec2\AppSpec.yaml = aws\ec2\AppSpec.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{E036E5DF-F658-491D-8CAA-1212F22566F3}"
+	ProjectSection(SolutionItems) = preProject
+		aws\ec2\scripts\checkaccess.sh = aws\ec2\scripts\checkaccess.sh
+		aws\ec2\scripts\update_config.sh = aws\ec2\scripts\update_config.sh
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +77,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E3709931-74CB-41CF-B4DA-938375B8674D} = {FCCD991B-5C33-414B-9B2A-06C62D5326DF}
+		{E036E5DF-F658-491D-8CAA-1212F22566F3} = {E3709931-74CB-41CF-B4DA-938375B8674D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {076F7F64-9D07-449A-9DA7-C6DA19167905}
