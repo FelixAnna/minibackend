@@ -5,8 +5,8 @@ files:
     destination: /webapps/boapi
 hooks:
   AfterInstall:
-    - location: scripts/update_config.sh
+    - location: update_config.sh
       timeout: 15
   ValidateService:
-    - location: scripts/checkaccess.sh
+    - location: checkaccess.sh
       timeout: 30
