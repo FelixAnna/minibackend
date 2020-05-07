@@ -1,3 +1,4 @@
 #!/bin/bash  
 
-dotnet "./BookingOffline.Web.dll"
+cd /webapps/boapi/
+dotnet BookingOffline.Web.dll
