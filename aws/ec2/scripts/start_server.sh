@@ -1,1 +1,3 @@
-dotnet BookingOffline.Web.dll
+#!/bin/bash  
+
+dotnet "./BookingOffline.Web.dll"
