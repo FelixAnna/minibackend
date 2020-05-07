@@ -1,0 +1,62 @@
+version: 0.2
+
+env:
+  variables:
+     configuration: "release"
+  #parameter-store:
+     # key: "value"
+     # key: "value"
+  #secrets-manager:
+     # key: secret-id:json-key:version-stage:version-id
+     # key: secret-id:json-key:version-stage:version-id
+  #exported-variables:
+     # - variable
+     # - variable
+  #git-credential-helper: yes
+
+phases:
+  #install:
+    #If you use the Ubuntu standard image 2.0 or later, you must specify runtime-versions.
+    #If you specify runtime-versions and use an image other than Ubuntu standard image 2.0, the build fails.
+    #runtime-versions:
+      # name: version
+      # name: version
+    #commands:
+      # - command
+      # - command
+  pre_build:
+    commands:
+      - echo build with configutation $configuration
+      - dotnet clean ./BookingOffline.Web/BookingOffline.Web.csproj
+      - echo restore project
+      - dotnet restore
+  build:
+    commands:
+      - echo build project
+      - dotnet build
+      - echo run test
+      # - dotnet test ./BookingOfflline.Services.Tests/BookingOfflline.Services.Tests.csproj --configuration $configuration
+  post_build:
+    commands:
+      - echo publish project
+      - dotnet publish ./BookingOffline.Web/BookingOffline.Web.csproj --configuration $configuration --output "./publish"
+      - ls -al "./aws/ec2/scripts"
+      - cp -r "./aws/ec2/scripts" "./publish"
+      - cp -r "./aws/ec2/appspec.yml" "./publish"
+      - ls -al "./publish/scripts"
+#reports:
+  #report-name-or-arn:
+    #files:
+      # - location
+      # - location
+    #base-directory: location
+    #discard-paths: yes
+    #file-format: JunitXml | CucumberJson
+artifacts:
+  files:
+    - '**/*'
+  name: $(date +%Y-%m-%d).zip
+  base-directory: ./publish
+#cache:
+  #paths:
+    # - paths
