@@ -1,0 +1,1 @@
+dotnet BookingOffline.Web.dll
