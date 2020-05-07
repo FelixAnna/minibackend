@@ -33,6 +33,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{E036E5DF-F658-491D-8CAA-1212F22566F3}"
 	ProjectSection(SolutionItems) = preProject
 		aws\ec2\scripts\checkaccess.sh = aws\ec2\scripts\checkaccess.sh
+		aws\ec2\scripts\install_dependencies.sh = aws\ec2\scripts\install_dependencies.sh
+		aws\ec2\scripts\start_server.sh = aws\ec2\scripts\start_server.sh
 		aws\ec2\scripts\update_config.sh = aws\ec2\scripts\update_config.sh
 	EndProjectSection
 EndProject
