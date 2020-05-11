@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookingOffline.Repositories.Sqlite
 {
-    public class AlipayUserRepository : IAlipayUserRepository
+    public class AlipayUserRepository : IUserRepository<AlipayUser>
     {
         private readonly BODBContext _context;
         public AlipayUserRepository(BODBContext context)
@@ -34,7 +34,7 @@ namespace BookingOffline.Repositories.Sqlite
             return user;
         }
 
-        public AlipayUser FindByAlipayId(string alipayUserId)
+        public AlipayUser FindByOpenId(string alipayUserId)
         {
             var user = _context.AlipayUsers.FirstOrDefault(x => x.AlipayUserId == alipayUserId);
             return user;

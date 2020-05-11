@@ -1,4 +1,5 @@
-﻿using BookingOffline.Repositories.Interfaces;
+﻿using BookingOffline.Entities;
+using BookingOffline.Repositories.Interfaces;
 using BookingOffline.Services.Models;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
@@ -8,11 +9,11 @@ namespace BookingOffline.Services
     public class UserService : IUserService
     {
         private readonly ILogger<UserService> _logger;
-        private readonly IAlipayUserRepository _userRepo;
-        private readonly IWechatUserRepository _wechatUserRepo;
+        private readonly IUserRepository<AlipayUser> _userRepo;
+        private readonly IUserRepository<WechatUser> _wechatUserRepo;
 
-        public UserService(IAlipayUserRepository userRepo,
-            IWechatUserRepository wechatUserRepo,
+        public UserService(IUserRepository<AlipayUser> userRepo,
+            IUserRepository<WechatUser> wechatUserRepo,
             ILogger<UserService> logger)
         {
             _logger = logger;

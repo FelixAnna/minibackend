@@ -15,16 +15,16 @@ namespace BookingOffline.Services
         private readonly ITokenGeneratorService _tokenService;
 
         private readonly IAlipayService _alipayService;
-        private readonly IAlipayUserRepository _userRepo;
+        private readonly IUserRepository<AlipayUser> _userRepo;
 
         private readonly IWechatService _wechatService;
-        private readonly IWechatUserRepository _wechatUserRepo;
+        private readonly IUserRepository<WechatUser> _wechatUserRepo;
 
         public LoginService(ITokenGeneratorService tokenService, 
-            IAlipayService alipayService, 
-            IAlipayUserRepository userRepo,
+            IAlipayService alipayService,
+            IUserRepository<AlipayUser> userRepo,
             IWechatService wechatService,
-            IWechatUserRepository wechatUserRepo,
+            IUserRepository<WechatUser> wechatUserRepo,
             ILogger<LoginService> logger)
         {
             _logger = logger;
@@ -44,7 +44,7 @@ namespace BookingOffline.Services
                 return null;
             }
 
-            var alipayUser = _userRepo.FindByAlipayId(response.AlipayUserId);
+            var alipayUser = _userRepo.FindByOpenId(response.AlipayUserId);
             if (alipayUser == null)
             {
                 alipayUser = _userRepo.Create(new AlipayUser()

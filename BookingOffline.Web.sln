@@ -28,6 +28,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ec2", "ec2", "{E3709931-74CB-41CF-B4DA-938375B8674D}"
 	ProjectSection(SolutionItems) = preProject
 		aws\ec2\appspec.yml = aws\ec2\appspec.yml
+		aws\ec2\buildspec.yml = aws\ec2\buildspec.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{E036E5DF-F658-491D-8CAA-1212F22566F3}"

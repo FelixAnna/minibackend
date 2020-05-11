@@ -13,16 +13,16 @@ namespace BookingOffline.Services.Tests
     public class UserServiceTests
     {
         private ILogger<UserService> _logger;
-        private IAlipayUserRepository _userRepo;
-        private IWechatUserRepository _wechatUserRepo;
+        private IUserRepository<AlipayUser> _userRepo;
+        private IUserRepository<WechatUser> _wechatUserRepo;
         private UserService _service;
 
         [SetUp]
         public void Setup()
         {
             _logger = A.Fake<ILogger<UserService>>();
-            _userRepo = A.Fake<IAlipayUserRepository>();
-            _wechatUserRepo = A.Fake<IWechatUserRepository>();
+            _userRepo = A.Fake<IUserRepository<AlipayUser>>();
+            _wechatUserRepo = A.Fake<IUserRepository<WechatUser>>();
 
             _service = new UserService(_userRepo, _wechatUserRepo, _logger);
         }

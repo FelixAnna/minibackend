@@ -15,15 +15,19 @@ namespace BookingOffline.Services
     {
         private readonly ILogger<OrderService> _logger;
         private readonly IOrderRepository _orderRepo;
-        private readonly IAlipayUserRepository _userRepository;
-        public OrderService(IOrderRepository orderRepo, IAlipayUserRepository userRepository, ILogger<OrderService> logger)
+        private readonly IUserRepository<AlipayUser> _userRepository;
+        private readonly IUserRepository<WechatUser> _weUserRepository;
+        public OrderService(IOrderRepository orderRepo, IUserRepository<AlipayUser> userRepository,
+            IUserRepository<WechatUser> weUserRepository,
+            ILogger<OrderService> logger)
         {
             _orderRepo = orderRepo;
             _userRepository = userRepository;
+            _weUserRepository = weUserRepository;
             _logger = logger;
         }
 
-        public OrderResultModel CreateOrder(string userId, OrderModel order)
+        public OrderResultModel CreateOrder<T>(string userId, OrderModel order)
         {
             var newOrder = _orderRepo.Create(new Order()
             {
@@ -32,11 +36,19 @@ namespace BookingOffline.Services
                 Options = JsonConvert.SerializeObject(order.Options)
             });
 
-            var user = _userRepository.FindById(userId);
-            return OrderResultModel.FromOrder(newOrder, user);
+            if (typeof(T) == typeof(AlipayUser))
+            {
+                var user = _userRepository.FindById(userId);
+                return OrderResultModel.FromOrder(newOrder, user);
+            }
+            else
+            {
+                var user = _weUserRepository.FindById(userId);
+                return OrderResultModel.FromOrder(newOrder, user);
+            }
         }
 
-        public async Task<OrderResultModel> UpdateOrderAsync(int id, string userId, OrderModel model)
+        public async Task<OrderResultModel> UpdateOrderAsync<T>(int id, string userId, OrderModel model)
         {
             var order = _orderRepo.FindById(id);
             if (order == null)
@@ -44,15 +56,24 @@ namespace BookingOffline.Services
                 return null;
             }
 
-            order.Options= JsonConvert.SerializeObject(model.Options);
+            order.Options = JsonConvert.SerializeObject(model.Options);
             await _orderRepo.UpdateAsync(order);
 
             var newOrder = _orderRepo.FindById(id);
-            var user = _userRepository.FindById(userId);
-            return OrderResultModel.FromOrder(newOrder, user);
+
+            if (typeof(T) == typeof(AlipayUser))
+            {
+                var user = _userRepository.FindById(userId);
+                return OrderResultModel.FromOrder(newOrder, user);
+            }
+            else
+            {
+                var user = _weUserRepository.FindById(userId);
+                return OrderResultModel.FromOrder(newOrder, user);
+            }
         }
 
-        public OrderResultModel GetOrder(int orderId)
+        public OrderResultModel GetOrder<T>(int orderId)
         {
             var order = _orderRepo.FindById(orderId);
             if (order == null)
@@ -60,20 +81,32 @@ namespace BookingOffline.Services
                 return null;
             }
 
-            var users = new List<AlipayUser>();
+            var result = new OrderResultModel();
             var relatedUserIds = order.OrderItems.Select(x => x.CreatedBy).ToList();
             relatedUserIds.Add(order.CreatedBy);
             if (relatedUserIds.Any())
             {
-                users = _userRepository.FindAll(relatedUserIds.ToArray()).ToList();
+                if (typeof(T) == typeof(AlipayUser))
+                {
+                    var users = _userRepository.FindAll(relatedUserIds.ToArray()).ToList();
+                    result = OrderResultModel.FromOrder(order, users.ToArray());
+                }
+                else
+                {
+                    var users = _weUserRepository.FindAll(relatedUserIds.ToArray()).ToList();
+                    result = OrderResultModel.FromOrder(order, users.ToArray());
+                }
+            }
+            else
+            {
+                result = OrderResultModel.FromOrder(order, new List<AlipayUser>().ToArray());
             }
 
-            var result = OrderResultModel.FromOrder(order, users.ToArray());
 
             return result;
         }
 
-        public OrderCollectionResultModel GetOrders(string userId, DateTime? startDate = null, DateTime? endDate = null, int page = 1, int size = 10)
+        public OrderCollectionResultModel GetOrders<T>(string userId, DateTime? startDate = null, DateTime? endDate = null, int page = 1, int size = 10)
         {
             var orders = _orderRepo.FindAll(userId);
             if (startDate.HasValue)
@@ -87,20 +120,44 @@ namespace BookingOffline.Services
             }
 
             var returnedOrders = orders?.Skip((page - 1) * size).Take(size).ToList();
-            var users = new List<AlipayUser>();
             var relatedUserIds = returnedOrders.Select(x => x.CreatedBy).ToList();
+
+            OrderCollectionResultModel results;
             if (relatedUserIds.Any())
             {
-                users = _userRepository.FindAll(relatedUserIds.ToArray()).ToList();
+                if (typeof(T) == typeof(AlipayUser))
+                {
+                    var users = _userRepository.FindAll(relatedUserIds.ToArray()).ToList();
+                    results = new OrderCollectionResultModel()
+                    {
+                        TotalCount = orders.Count(),
+                        Orders = (from od in returnedOrders
+                                  let us = users.FirstOrDefault(u => u.Id == od.CreatedBy)
+                                  select OrderCollectionItem.ToOrderCollectionItem(od, us)).OrderByDescending(x => x.CreatedAt).ToList()
+                    };
+                }
+                else
+                {
+                    var users = _weUserRepository.FindAll(relatedUserIds.ToArray()).ToList();
+                    results = new OrderCollectionResultModel()
+                    {
+                        TotalCount = orders.Count(),
+                        Orders = (from od in returnedOrders
+                                  let us = users.FirstOrDefault(u => u.Id == od.CreatedBy)
+                                  select OrderCollectionItem.ToOrderCollectionItem(od, us)).OrderByDescending(x => x.CreatedAt).ToList()
+                    };
+                }
             }
-
-            var results = new OrderCollectionResultModel()
+            else
             {
-                TotalCount = orders.Count(),
-                Orders = (from od in returnedOrders
-                          let us = users.FirstOrDefault(u => u.Id == od.CreatedBy)
-                          select OrderCollectionItem.ToOrderCollectionItem(od, us)).OrderByDescending(x => x.CreatedAt).ToList()
-            };
+                results = new OrderCollectionResultModel()
+                {
+                    TotalCount = orders.Count(),
+                    Orders = (from od in returnedOrders
+                              let us = (AlipayUser)null
+                              select OrderCollectionItem.ToOrderCollectionItem(od, us)).OrderByDescending(x => x.CreatedAt).ToList()
+                };
+            }
 
             return results;
         }

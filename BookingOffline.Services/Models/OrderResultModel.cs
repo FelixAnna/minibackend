@@ -35,6 +35,22 @@ namespace BookingOffline.Services.Models
 
             return result;
         }
+
+        public static OrderResultModel FromOrder(Order order, params WechatUser[] users)
+        {
+            var result = new OrderResultModel()
+            {
+                OrderId = order.OrderId,
+                Options = JsonConvert.DeserializeObject<IList<OrderOptionModel>>(order.Options),
+                State = order.State,
+                ProductList = order.OrderItems?.Select(x => OrderItemResultModel.FromOrderItem(x, users)).OrderByDescending(x => x.CreatedAt).ToList() ?? new List<OrderItemResultModel>(),
+                CreatedAt = order.CreatedAt.ToUniversalTime(),
+                CreatedBy = order.CreatedBy,
+                OwnerName = users.FirstOrDefault(x => x.Id == order.CreatedBy)?.NickName
+            };
+
+            return result;
+        }
     }
 
     public class OrderItemResultModel
@@ -68,6 +84,24 @@ namespace BookingOffline.Services.Models
                 OwnerId = iten.CreatedBy,
                 OwnerAvatar = users.FirstOrDefault(x => x.Id == iten.CreatedBy)?.AlipayPhoto,
                 OwnerName = users.FirstOrDefault(x => x.Id == iten.CreatedBy)?.AlipayName
+            };
+
+            return result;
+        }
+
+        public static OrderItemResultModel FromOrderItem(OrderItem iten, IEnumerable<WechatUser> users)
+        {
+            var result = new OrderItemResultModel()
+            {
+                OrderItemId = iten.OrderItemId,
+                Name = iten.Name,
+                Price = iten.Price,
+                Remark = iten.Remark,
+                Options = iten.OrderItemOptions?.Select(OrderItemOptionsResultModel.FromOrderItenOption).ToList() ?? new List<OrderItemOptionsResultModel>(),
+                CreatedAt = iten.CreatedAt.ToUniversalTime(),
+                OwnerId = iten.CreatedBy,
+                OwnerAvatar = users.FirstOrDefault(x => x.Id == iten.CreatedBy)?.AvatarUrl,
+                OwnerName = users.FirstOrDefault(x => x.Id == iten.CreatedBy)?.NickName
             };
 
             return result;

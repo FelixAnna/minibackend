@@ -1,14 +1,12 @@
 ﻿using BookingOffline.Entities;
 using BookingOffline.Repositories.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BookingOffline.Repositories.SqlServer
 {
-    public class WechatUserRepository : IWechatUserRepository
+    public class WechatUserRepository : IUserRepository<WechatUser>
     {
         private readonly BODBContext _context;
         public WechatUserRepository(BODBContext context)

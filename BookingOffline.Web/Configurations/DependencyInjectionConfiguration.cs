@@ -5,6 +5,7 @@ using BookingOffline.Services;
 using BookingOffline.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using BookingOffline.Entities;
 
 namespace BookingOffline.Web.Configurations
 {
@@ -20,8 +21,8 @@ namespace BookingOffline.Web.Configurations
 
         public static void AddDASevices(this IServiceCollection services)
         {
-            services.AddScoped<IAlipayUserRepository, AlipayUserRepository>();
-            services.AddScoped<IWechatUserRepository, WechatUserRepository>();
+            services.AddScoped<IUserRepository<AlipayUser>, AlipayUserRepository>();
+            services.AddScoped<IUserRepository<WechatUser>, WechatUserRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderItemRepository, OrderItemRepository>();
             services.AddScoped<BODBContext>();

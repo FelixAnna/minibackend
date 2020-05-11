@@ -12,9 +12,9 @@ namespace BookingOffline.Services.Tests
         private ILogger<LoginService> _logger;
         private ITokenGeneratorService _tokenService;
         private IAlipayService _alipayService;
-        private IAlipayUserRepository _userRepo;
+        private IUserRepository<AlipayUser> _userRepo;
         private IWechatService _wechatService;
-        private IWechatUserRepository _wechatUserRepo;
+        private IUserRepository<WechatUser> _wechatUserRepo;
 
         private LoginService _service;
 
@@ -24,9 +24,9 @@ namespace BookingOffline.Services.Tests
             _logger = A.Fake<ILogger<LoginService>>();
             _tokenService = A.Fake<ITokenGeneratorService>();
             _alipayService = A.Fake<IAlipayService>();
-            _userRepo = A.Fake<IAlipayUserRepository>();
+            _userRepo = A.Fake<IUserRepository<AlipayUser>>();
             _wechatService = A.Fake<IWechatService>();
-            _wechatUserRepo = A.Fake<IWechatUserRepository>();
+            _wechatUserRepo = A.Fake<IUserRepository<WechatUser>>();
 
             _service = new LoginService(_tokenService, _alipayService, _userRepo, _wechatService, _wechatUserRepo, _logger);
         }
@@ -41,7 +41,7 @@ namespace BookingOffline.Services.Tests
 
             Assert.IsNull(result);
             A.CallTo(() => _alipayService.GetUserIdByCode(A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => _userRepo.FindByAlipayId(A<string>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => _userRepo.FindByOpenId(A<string>.Ignored)).MustNotHaveHappened();
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace BookingOffline.Services.Tests
             var fakeResponse = FakeDataHelper.GetFakeAlipayResponse(success: true);
             var fakeUserResult = FakeDataHelper.GetFakeAlipayUserById(success: false);
             A.CallTo(() => _alipayService.GetUserIdByCode(A<string>.Ignored)).Returns(fakeResponse);
-            A.CallTo(() => _userRepo.FindByAlipayId(A<string>.Ignored)).Returns(fakeUserResult);
+            A.CallTo(() => _userRepo.FindByOpenId(A<string>.Ignored)).Returns(fakeUserResult);
             A.CallTo(() => _userRepo.Create(A<AlipayUser>.Ignored)).Returns(new AlipayUser());
             A.CallTo(() => _tokenService.CreateJwtToken(A<AlipayUser>.Ignored)).Returns(fakeToken);
 
@@ -60,7 +60,7 @@ namespace BookingOffline.Services.Tests
             Assert.IsNotNull(result);
             Assert.AreEqual(result.BOToken, fakeToken);
             A.CallTo(() => _alipayService.GetUserIdByCode(A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => _userRepo.FindByAlipayId(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _userRepo.FindByOpenId(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _userRepo.Create(A<AlipayUser>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _tokenService.CreateJwtToken(A<AlipayUser>.Ignored)).MustHaveHappenedOnceExactly();
         }
@@ -72,7 +72,7 @@ namespace BookingOffline.Services.Tests
             var fakeResponse = FakeDataHelper.GetFakeAlipayResponse(success: true);
             var fakeUserResult = FakeDataHelper.GetFakeAlipayUserById(success: true);
             A.CallTo(() => _alipayService.GetUserIdByCode(A<string>.Ignored)).Returns(fakeResponse);
-            A.CallTo(() => _userRepo.FindByAlipayId(A<string>.Ignored)).Returns(fakeUserResult);
+            A.CallTo(() => _userRepo.FindByOpenId(A<string>.Ignored)).Returns(fakeUserResult);
             A.CallTo(() => _userRepo.Create(A<AlipayUser>.Ignored)).Returns(fakeUserResult);
             A.CallTo(() => _tokenService.CreateJwtToken(A<AlipayUser>.Ignored)).Returns(fakeToken);
 
@@ -81,7 +81,7 @@ namespace BookingOffline.Services.Tests
             Assert.IsNotNull(result);
             Assert.AreEqual(result.BOToken, fakeToken);
             A.CallTo(() => _alipayService.GetUserIdByCode(A<string>.Ignored)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => _userRepo.FindByAlipayId(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _userRepo.FindByOpenId(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _userRepo.Create(A<AlipayUser>.Ignored)).MustNotHaveHappened();
             A.CallTo(() => _tokenService.CreateJwtToken(A<AlipayUser>.Ignored)).MustHaveHappenedOnceExactly();
         }
