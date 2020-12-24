@@ -1,3 +1,6 @@
+# miniBackend
+  mini-program backend,  webapi (.net core) version, also support deploy to aws elastic beanstalk.
+
 #docker build, given your image name: yufelix/boapp
 docker build -t yufelix/boapp .
 
