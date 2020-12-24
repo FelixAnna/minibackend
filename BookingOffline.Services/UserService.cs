@@ -1,4 +1,5 @@
-﻿using BookingOffline.Repositories.Interfaces;
+﻿using BookingOffline.Entities;
+using BookingOffline.Repositories.Interfaces;
 using BookingOffline.Services.Models;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
@@ -8,23 +9,27 @@ namespace BookingOffline.Services
     public class UserService : IUserService
     {
         private readonly ILogger<UserService> _logger;
-        private readonly IAlipayUserRepository _userRepo;
+        private readonly IUserRepository<AlipayUser> _userRepo;
+        private readonly IUserRepository<WechatUser> _wechatUserRepo;
 
-        public UserService(IAlipayUserRepository userRepo, ILogger<UserService> logger)
+        public UserService(IUserRepository<AlipayUser> userRepo,
+            IUserRepository<WechatUser> wechatUserRepo,
+            ILogger<UserService> logger)
         {
             _logger = logger;
             _userRepo = userRepo;
+            _wechatUserRepo = wechatUserRepo;
         }
 
-        public UserResultModel GetUserInfo(string userId)
+        public UserResultModel GetAlipayUserInfo(string userId)
         {
             var user = _userRepo.FindById(userId);
-            return new UserResultModel()
+            return new AlipayUserModel()
             {
                 Id=user.Id,
-                AlipayName=user.AlipayName,
-                AlibabaUserId=user.AlibabaUserId,
-                AlipayPhoto=user.AlipayPhoto,
+                NickName=user.AlipayName,
+                AvatarUrl = user.AlipayPhoto,
+                AlibabaUserId =user.AlibabaUserId,
                 AlipayUserId=user.AlipayUserId,
                 CreatedAt=user.CreatedAt
             };
@@ -35,13 +40,47 @@ namespace BookingOffline.Services
             var user = _userRepo.FindById(userId);
             if(user == null)
             {
-                _logger.LogError($"User {userId} not exists.");
+                _logger.LogError($"Alipay User {userId} not exists.");
                 return false;
             }
 
             user.AlipayName = nickName;
             user.AlipayPhoto = photo;
             await _userRepo.UpdateAsync(user);
+            return true;
+        }
+
+        public UserResultModel GetWechatUserInfo(string userId)
+        {
+            var user = _wechatUserRepo.FindById(userId);
+            return new WechatUserModel()
+            {
+                Id = user.Id,
+                NickName = user.NickName,
+                AvatarUrl = user.AvatarUrl,
+                OpenId = user.OpenId,
+                UnionId = user.UnionId,
+                CreatedAt = user.CreatedAt
+            };
+        }
+
+        public async Task<bool> UpdateWechatUserAsync(string userId, UserModel model)
+        {
+            var user = _wechatUserRepo.FindById(userId);
+            if (user == null)
+            {
+                _logger.LogError($"Wechat User {userId} not exists.");
+                return false;
+            }
+
+            user.NickName = model.NickName;
+            user.AvatarUrl = model.AvatarUrl;
+            user.Country = model.Country;
+            user.Province = model.Province;
+            user.City = model.City;
+            user.Gender = model.Gender;
+            user.Language = model.Language;
+            await _wechatUserRepo.UpdateAsync(user);
             return true;
         }
     }

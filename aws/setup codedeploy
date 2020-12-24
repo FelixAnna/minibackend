@@ -1,0 +1,19 @@
+#setup deploy agant on target server
+sudo apt update
+sudo apt install ruby
+
+#install deploy agent: https://docs.aws.amazon.com/codedeploy/latest/userguide/codedeploy-agent-operations-install-ubuntu.html
+#bucketname: https://docs.aws.amazon.com/codedeploy/latest/userguide/resource-kit.html#resource-kit-bucket-names
+wget https://aws-codedeploy-ap-southeast-1.s3.ap-southeast-1.amazonaws.com/latest/install
+
+sudo chmod +x ./install
+sudo ./install auto
+
+sudo service codedeploy-agent status
+sudo service codedeploy-agent start
+
+#ensure deploy agant updated
+sudo /opt/codedeploy-agent/bin/install auto
+
+#install aws client
+sudo apt install awscli

@@ -1,4 +1,5 @@
 ﻿using Alipay.AopSdk.Core.Response;
+using BookingOffline.Common.Models;
 using BookingOffline.Entities;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,37 @@ namespace BookingOffline.Services.Tests
             }
 
             return new AlipayUser();
+        }
+
+        public static WechatLoginResultModel GetFakeWechatLoginResultModel(bool success = false)
+        {
+            if (!success)
+            {
+                return new WechatLoginResultModel()
+                {
+                    ErrorCode = 40029,
+                    ErrorMsg = "code 无效"
+                };
+            }
+
+            return new WechatLoginResultModel()
+            {
+                OpenId = "anyId",
+                SessionKey = "anysessionid",
+                UnionId = "anytoken",
+                ErrorCode = 0,
+                ErrorMsg = null
+            };
+        }
+
+        public static WechatUser GetFakeWechatUserById(bool success = false)
+        {
+            if (!success)
+            {
+                return null;
+            }
+
+            return new WechatUser();
         }
 
         public static Order GetFakeOrder(bool success = true)

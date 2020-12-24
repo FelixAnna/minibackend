@@ -5,6 +5,7 @@ using BookingOffline.Services.Interfaces;
 using BookingOffline.Services.Models;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Threading.Tasks;
 
 namespace BookingOffline.Services
 {
@@ -12,14 +13,25 @@ namespace BookingOffline.Services
     {
         private readonly ILogger<LoginService> _logger;
         private readonly ITokenGeneratorService _tokenService;
-        private readonly IAlipayService _alipayService;
-        private readonly IAlipayUserRepository _userRepo;
 
-        public LoginService(ITokenGeneratorService tokenService, IAlipayService alipayService, IAlipayUserRepository userRepo, ILogger<LoginService> logger)
+        private readonly IAlipayService _alipayService;
+        private readonly IUserRepository<AlipayUser> _userRepo;
+
+        private readonly IWechatService _wechatService;
+        private readonly IUserRepository<WechatUser> _wechatUserRepo;
+
+        public LoginService(ITokenGeneratorService tokenService, 
+            IAlipayService alipayService,
+            IUserRepository<AlipayUser> userRepo,
+            IWechatService wechatService,
+            IUserRepository<WechatUser> wechatUserRepo,
+            ILogger<LoginService> logger)
         {
             _logger = logger;
             this._tokenService = tokenService;
             this._alipayService = alipayService;
+            this._wechatService = wechatService; ;
+            this._wechatUserRepo = wechatUserRepo;
             _userRepo = userRepo;
         }
 
@@ -32,7 +44,7 @@ namespace BookingOffline.Services
                 return null;
             }
 
-            var alipayUser = _userRepo.FindByAlipayId(response.AlipayUserId);
+            var alipayUser = _userRepo.FindByOpenId(response.AlipayUserId);
             if (alipayUser == null)
             {
                 alipayUser = _userRepo.Create(new AlipayUser()
@@ -48,13 +60,54 @@ namespace BookingOffline.Services
             var result = new LoginResultModel()
             {
                 BOToken = tokenStr,
-                AccessToken = response.AccessToken,
-                ExpiresIn = response.ExpiresIn,
-                ReExpiresIn = response.ReExpiresIn,
-                RefreshToken = response.RefreshToken,
+                //AccessToken = response.AccessToken,
+                //ExpiresIn = response.ExpiresIn,
+                //ReExpiresIn = response.ReExpiresIn,
+                //RefreshToken = response.RefreshToken,
                 UserId = alipayUser.Id,
                 NickName = alipayUser.AlipayName,
-                Photo = alipayUser.AlipayPhoto
+                AvatarUrl = alipayUser.AlipayPhoto
+            };
+
+            return result;
+        }
+
+        public async Task<LoginResultModel> LoginMiniWechatAsync(string code)
+        {
+            var response = await _wechatService.GetUserIdByCode(code);
+            //retry
+            int retryCount = 0;
+            while(response.ErrorCode <0 && retryCount++<3)
+            {
+                response = await _wechatService.GetUserIdByCode(code);
+            }
+
+            if (response.IsError)
+            {
+                _logger.LogError(response.ErrorMsg);
+                return null;
+            }
+
+            var wechatUser = _wechatUserRepo.FindByOpenId(response.OpenId);
+            if (wechatUser == null)
+            {
+                wechatUser = _wechatUserRepo.Create(new WechatUser()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    OpenId = response.OpenId,
+                    UnionId = response.UnionId,
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
+
+            var tokenStr = _tokenService.CreateJwtToken(wechatUser);
+            var result = new LoginResultModel()
+            {
+                BOToken = tokenStr,
+                //AccessToken = response.SessionKey,
+                UserId = wechatUser.Id,
+                NickName = wechatUser.NickName,
+                AvatarUrl = wechatUser.AvatarUrl
             };
 
             return result;

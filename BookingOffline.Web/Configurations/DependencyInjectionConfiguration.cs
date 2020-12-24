@@ -5,6 +5,7 @@ using BookingOffline.Services;
 using BookingOffline.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using BookingOffline.Entities;
 
 namespace BookingOffline.Web.Configurations
 {
@@ -20,7 +21,8 @@ namespace BookingOffline.Web.Configurations
 
         public static void AddDASevices(this IServiceCollection services)
         {
-            services.AddScoped<IAlipayUserRepository, AlipayUserRepository>();
+            services.AddScoped<IUserRepository<AlipayUser>, AlipayUserRepository>();
+            services.AddScoped<IUserRepository<WechatUser>, WechatUserRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderItemRepository, OrderItemRepository>();
             services.AddScoped<BODBContext>();
@@ -29,6 +31,9 @@ namespace BookingOffline.Web.Configurations
         public static void AddCommonSevices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IAlipayService, AlipayService>(provider => new AlipayService(configuration["Alipay:AppId"], configuration["Alipay:PrivateKey"], configuration["Alipay:PublicKey"]));
+            services.AddScoped<ITokenGeneratorService, TokenGeneratorService>();
+
+            services.AddScoped<IWechatService, WechatService>(provider => new WechatService(configuration["Wechat:AppId"], configuration["Wechat:Secret"]));
             services.AddScoped<ITokenGeneratorService, TokenGeneratorService>();
         }
     }

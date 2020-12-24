@@ -40,5 +40,20 @@ namespace BookingOffline.Services.Models
                 OwnerAvatar=user?.AlipayPhoto
             };
         }
+
+        public static OrderCollectionItem ToOrderCollectionItem(Order order, WechatUser user)
+        {
+            return new OrderCollectionItem()
+            {
+                OrderId = order.OrderId,
+                State = order.State,
+                TotalItems = order.OrderItems?.Count ?? 0,
+                TotalCost = order.OrderItems?.Sum(x => x.Price) ?? 0,
+                CreatedAt = order.CreatedAt.ToUniversalTime(),
+                OwnerId = order.CreatedBy,
+                OwnerName = user?.NickName,
+                OwnerAvatar = user?.AvatarUrl
+            };
+        }
     }
 }

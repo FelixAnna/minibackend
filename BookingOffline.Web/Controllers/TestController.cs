@@ -15,7 +15,7 @@ namespace BookingOffline.Web.Controllers
         {
             this._tokenService = tokenService;
         }
-
+#if DEBUG
         [AllowAnonymous]
         [HttpGet("token")]
         public IActionResult Index()
@@ -30,6 +30,7 @@ namespace BookingOffline.Web.Controllers
             });
             return Ok(new { token = tokenStr });
         }
+#endif
 
         [HttpGet("running")]
         [AllowAnonymous]

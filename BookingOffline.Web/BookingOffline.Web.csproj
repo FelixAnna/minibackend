@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BookingOffline.Common\BookingOffline.Common.csproj" />
-    <ProjectReference Include="..\BookingOffline.Repositories.Sqlite\BookingOffline.Repositories.Sqlite.csproj" />
     <ProjectReference Include="..\BookingOffline.Repositories.SqlServer\BookingOffline.Repositories.SqlServer.csproj" />
     <ProjectReference Include="..\BookingOffline.Repositories\BookingOffline.Repositories.csproj" />
     <ProjectReference Include="..\BookingOffline.Services\BookingOffline.Services.csproj" />

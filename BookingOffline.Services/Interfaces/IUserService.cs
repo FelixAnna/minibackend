@@ -6,6 +6,9 @@ namespace BookingOffline.Services
     public interface IUserService
     {
         Task<bool> UpdateAlipayUserAsync(string userId, string nickName, string photo);
-        UserResultModel GetUserInfo(string userId);
+        UserResultModel GetAlipayUserInfo(string userId);
+
+        Task<bool> UpdateWechatUserAsync(string userId, UserModel model);
+        UserResultModel GetWechatUserInfo(string userId);
     }
 }

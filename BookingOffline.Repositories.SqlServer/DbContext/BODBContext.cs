@@ -6,6 +6,7 @@ namespace BookingOffline.Repositories.SqlServer
     public class BODBContext : DbContext
     {
         public DbSet<AlipayUser> AlipayUsers { get; set; }
+        public DbSet<WechatUser> WechatUsers { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<OrderItemOption> OrderItemOptions { get; set; }

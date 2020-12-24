@@ -1,5 +1,7 @@
-﻿using BookingOffline.Services.Interfaces;
+﻿using BookingOffline.Entities;
+using BookingOffline.Services.Interfaces;
 using BookingOffline.Services.Models;
+using BookingOffline.Web.Configurations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -27,7 +29,16 @@ namespace BookingOffline.Web.Controllers
         public ActionResult CreateOrder([FromBody]OrderModel model)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var order = _service.CreateOrder(userId, model);
+            OrderResultModel order;
+            if (User.IsAlipayUser()) 
+            {
+                order = _service.CreateOrder<AlipayUser>(userId, model);
+            }
+            else
+            {
+                order = _service.CreateOrder<WechatUser>(userId, model);
+            }
+
             return Ok(order);
         }
 
@@ -40,7 +51,16 @@ namespace BookingOffline.Web.Controllers
         public async Task<ActionResult> UpdateOrder(int Id, [FromBody]OrderModel model)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var order = await _service.UpdateOrderAsync(Id, userId, model);
+            OrderResultModel order;
+            if (User.IsAlipayUser())
+            {
+                order = await _service.UpdateOrderAsync<AlipayUser>(Id, userId, model);
+            }
+            else
+            {
+                order = await _service.UpdateOrderAsync<WechatUser>(Id, userId, model);
+            }
+
             if (order == null)
             {
                 return NotFound();
@@ -97,7 +117,16 @@ namespace BookingOffline.Web.Controllers
         [HttpGet]
         public ActionResult GetOrder(int orderId)
         {
-            var order = _service.GetOrder(orderId);
+            OrderResultModel order;
+            if (User.IsAlipayUser())
+            {
+                order = _service.GetOrder<AlipayUser>(orderId);
+            }
+            else
+            {
+                order = _service.GetOrder<WechatUser>(orderId);
+            }
+
             if (order != null)
             {
                 return Ok(order);
@@ -110,7 +139,16 @@ namespace BookingOffline.Web.Controllers
         public ActionResult GetOrders(int page = 1, int size = 10, DateTime? startDate = null, DateTime? endDate = null)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var orders = _service.GetOrders(userId, startDate, endDate, page, size);
+            OrderCollectionResultModel orders;
+            if (User.IsAlipayUser())
+            {
+                orders = _service.GetOrders<AlipayUser>(userId, startDate, endDate, page, size);
+            }
+            else
+            {
+                orders = _service.GetOrders<WechatUser>(userId, startDate, endDate, page, size);
+            }
+
             if (orders.TotalCount > 0)
             {
                 return Ok(orders);

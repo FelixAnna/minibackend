@@ -16,7 +16,8 @@ namespace BookingOffline.Services.Tests
     {
         private ILogger<OrderService> _logger;
         private IOrderRepository _orderRepo;
-        private IAlipayUserRepository _userRepository;
+        private IUserRepository<AlipayUser> _userRepository;
+        private IUserRepository<WechatUser> _weUserRepository;
         private OrderService _service;
 
         [SetUp]
@@ -24,9 +25,10 @@ namespace BookingOffline.Services.Tests
         {
             _logger = A.Fake<ILogger<OrderService>>();
             _orderRepo = A.Fake<IOrderRepository>();
-            _userRepository = A.Fake<IAlipayUserRepository>();
+            _userRepository = A.Fake<IUserRepository<AlipayUser>>();
+            _weUserRepository = A.Fake<IUserRepository<WechatUser>>();
 
-            _service = new OrderService(_orderRepo, _userRepository, _logger);
+            _service = new OrderService(_orderRepo, _userRepository, _weUserRepository, _logger);
         }
 
         [Test]
@@ -36,10 +38,24 @@ namespace BookingOffline.Services.Tests
             A.CallTo(() => _orderRepo.Create(A<Order>.Ignored)).Returns(fakeOrder);
             A.CallTo(() => _userRepository.FindAll(A<string[]>.Ignored)).Returns(new List<AlipayUser>().AsQueryable());
 
-            var result = _service.CreateOrder("anyuser", new OrderModel() { });
+            var result = _service.CreateOrder<AlipayUser>("anyuser", new OrderModel() { });
 
             A.CallTo(() => _orderRepo.Create(A<Order>.Ignored)).MustHaveHappened();
             A.CallTo(() => _userRepository.FindById(A<string>.Ignored)).MustHaveHappened();
+            Assert.IsTrue(result != null);
+        }
+
+        [Test]
+        public void CreateOrder_ShouldSucceed_Wechat()
+        {
+            var fakeOrder = FakeDataHelper.GetFakeOrder(true);
+            A.CallTo(() => _orderRepo.Create(A<Order>.Ignored)).Returns(fakeOrder);
+            A.CallTo(() => _weUserRepository.FindAll(A<string[]>.Ignored)).Returns(new List<WechatUser>().AsQueryable());
+
+            var result = _service.CreateOrder<WechatUser>("anyuser", new OrderModel() { });
+
+            A.CallTo(() => _orderRepo.Create(A<Order>.Ignored)).MustHaveHappened();
+            A.CallTo(() => _weUserRepository.FindById(A<string>.Ignored)).MustHaveHappened();
             Assert.IsTrue(result != null);
         }
 
@@ -49,7 +65,21 @@ namespace BookingOffline.Services.Tests
             var fakeOrder = FakeDataHelper.GetFakeOrder(false);
             A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).Returns(fakeOrder);
 
-            var result = _service.UpdateOrderAsync(123, "anyUserId", new OrderModel() { }).Result;
+            var result = _service.UpdateOrderAsync<AlipayUser>(123, "anyUserId", new OrderModel() { }).Result;
+
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _orderRepo.UpdateAsync(A<Order>.Ignored)).MustNotHaveHappened();
+
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void UpdateOrder_WhenNotExists_ThenShouldFailed_Wechat()
+        {
+            var fakeOrder = FakeDataHelper.GetFakeOrder(false);
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).Returns(fakeOrder);
+
+            var result = _service.UpdateOrderAsync<WechatUser>(123, "anyUserId", new OrderModel() { }).Result;
 
             A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _orderRepo.UpdateAsync(A<Order>.Ignored)).MustNotHaveHappened();
@@ -63,7 +93,21 @@ namespace BookingOffline.Services.Tests
             var fakeOrder = FakeDataHelper.GetFakeOrder(true);
             A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).Returns(fakeOrder);
 
-            var result = _service.UpdateOrderAsync(123, "anyUserId", new OrderModel() { }).Result;
+            var result = _service.UpdateOrderAsync<AlipayUser>(123, "anyUserId", new OrderModel() { }).Result;
+
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappened();
+            A.CallTo(() => _orderRepo.UpdateAsync(A<Order>.Ignored)).MustHaveHappenedOnceExactly();
+
+            Assert.IsNotNull(result);
+        }
+
+        [Test]
+        public void UpdateOrder_ShouldSucceed_Wechat()
+        {
+            var fakeOrder = FakeDataHelper.GetFakeOrder(true);
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).Returns(fakeOrder);
+
+            var result = _service.UpdateOrderAsync<WechatUser>(123, "anyUserId", new OrderModel() { }).Result;
 
             A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappened();
             A.CallTo(() => _orderRepo.UpdateAsync(A<Order>.Ignored)).MustHaveHappenedOnceExactly();
@@ -78,7 +122,7 @@ namespace BookingOffline.Services.Tests
             A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).Returns(fakeOrder);
             A.CallTo(() => _userRepository.FindAll(A<string[]>.Ignored)).Returns(new List<AlipayUser>().AsQueryable());
 
-            var result = _service.GetOrder(123);
+            var result = _service.GetOrder<AlipayUser>(123);
 
             A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _userRepository.FindAll(A<string[]>.Ignored)).MustHaveHappenedOnceExactly();
@@ -92,7 +136,7 @@ namespace BookingOffline.Services.Tests
             var fakeOrder = FakeDataHelper.GetFakeOrder(false);
             A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).Returns(fakeOrder);
 
-            var result = _service.GetOrder(123);
+            var result = _service.GetOrder<AlipayUser>(123);
 
             A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _userRepository.FindAll(A<string[]>.Ignored)).MustNotHaveHappened();
@@ -107,7 +151,7 @@ namespace BookingOffline.Services.Tests
             A.CallTo(() => _orderRepo.FindAll(A<string>.Ignored)).Returns(new List<Order>() { fakeOrder }.AsQueryable());
             A.CallTo(() => _userRepository.FindAll(A<string[]>.Ignored)).Returns(new List<AlipayUser>().AsQueryable());
 
-            var result = _service.GetOrders("anyId");
+            var result = _service.GetOrders<AlipayUser>("anyId");
 
             A.CallTo(() => _orderRepo.FindAll(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _userRepository.FindAll(A<string[]>.Ignored)).MustHaveHappenedOnceExactly();
@@ -123,10 +167,71 @@ namespace BookingOffline.Services.Tests
             A.CallTo(() => _orderRepo.FindAll(A<string>.Ignored)).Returns(new List<Order>() { }.AsQueryable());
             A.CallTo(() => _userRepository.FindAll(A<string[]>.Ignored)).Returns(new List<AlipayUser>().AsQueryable());
 
-            var result = _service.GetOrders("anyId");
+            var result = _service.GetOrders<AlipayUser>("anyId");
 
             A.CallTo(() => _orderRepo.FindAll(A<string>.Ignored)).MustHaveHappenedOnceExactly();
             A.CallTo(() => _userRepository.FindAll(A<string[]>.Ignored)).MustNotHaveHappened();
+
+            Assert.NotNull(result);
+            Assert.IsTrue(result.TotalCount == 0);
+        }
+
+        [Test]
+        public void GetOrder_WhenOrderExists_ThenSuccess_Wechat()
+        {
+            var fakeOrder = FakeDataHelper.GetFakeOrder(true);
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).Returns(fakeOrder);
+            A.CallTo(() => _weUserRepository.FindAll(A<string[]>.Ignored)).Returns(new List<WechatUser>().AsQueryable());
+
+            var result = _service.GetOrder<WechatUser>(123);
+
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _weUserRepository.FindAll(A<string[]>.Ignored)).MustHaveHappenedOnceExactly();
+
+            Assert.NotNull(result);
+        }
+
+        [Test]
+        public void GetOrder_WhenOrderNotExists_ThenFailed_Wechat()
+        {
+            var fakeOrder = FakeDataHelper.GetFakeOrder(false);
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).Returns(fakeOrder);
+
+            var result = _service.GetOrder<WechatUser>(123);
+
+            A.CallTo(() => _orderRepo.FindById(A<int>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _weUserRepository.FindAll(A<string[]>.Ignored)).MustNotHaveHappened();
+
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void GetOrders_WhenOrderExists_ThenSuccess_Wechat()
+        {
+            var fakeOrder = FakeDataHelper.GetFakeOrder(true);
+            A.CallTo(() => _orderRepo.FindAll(A<string>.Ignored)).Returns(new List<Order>() { fakeOrder }.AsQueryable());
+            A.CallTo(() => _weUserRepository.FindAll(A<string[]>.Ignored)).Returns(new List<WechatUser>().AsQueryable());
+
+            var result = _service.GetOrders<WechatUser>("anyId");
+
+            A.CallTo(() => _orderRepo.FindAll(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _weUserRepository.FindAll(A<string[]>.Ignored)).MustHaveHappenedOnceExactly();
+
+            Assert.NotNull(result);
+            Assert.IsTrue(result.TotalCount == 1);
+        }
+
+        [Test]
+        public void GetOrders_WhenOrderNotExists_ThenReturnEmpty_Wechat()
+        {
+            var fakeOrder = FakeDataHelper.GetFakeOrder(false);
+            A.CallTo(() => _orderRepo.FindAll(A<string>.Ignored)).Returns(new List<Order>() { }.AsQueryable());
+            A.CallTo(() => _weUserRepository.FindAll(A<string[]>.Ignored)).Returns(new List<WechatUser>().AsQueryable());
+
+            var result = _service.GetOrders<WechatUser>("anyId");
+
+            A.CallTo(() => _orderRepo.FindAll(A<string>.Ignored)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _weUserRepository.FindAll(A<string[]>.Ignored)).MustNotHaveHappened();
 
             Assert.NotNull(result);
             Assert.IsTrue(result.TotalCount == 0);
